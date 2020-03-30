@@ -16,7 +16,7 @@
 - develop  
   - feature branches
   - front / back / ML / DB 
-  - ex) develp >> back >> `feature/auth/login`
+  - ex) develp >> back >> feature: `back/auth/login`
 
 - developer
   - personal branches - 개인적으로 필요시 파일 공유, 저장 및 관리 
