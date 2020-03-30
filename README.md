@@ -40,9 +40,9 @@
 
 - shift enter 누르고 내용을 작성하면 아래처럼 `...` 로 요약 된 커밋 메시지를 남길 수 있습니다~
 
-  ![](C:\Users\jayhy\OneDrive\바탕 화면\commit1.PNG)
+  ![](./doc/images/commit1.PNG)
 
-  ![](C:\Users\jayhy\OneDrive\바탕 화면\commit2.PNG)
+  ![](./doc/images/commit2.PNG)
 
   ```
   $ commit -m 'message file.exe feature
