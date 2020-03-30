@@ -7,8 +7,6 @@
 
 ## Dev_Notice
 
-
-
 #### Branch
 
 - master 
@@ -22,7 +20,7 @@
 
 - developer
   - personal branches - 개인적으로 필요시 파일 공유, 저장 및 관리 
-  - ex) developer >> `soulG/conf`
+  - ex) `soulG/conf`
 
 
 
