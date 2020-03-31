@@ -9,7 +9,6 @@ train_captions = data[:20, 2:]
 print('------------train_captions-------------')
 print(train_captions[:5, :])
 print()
-print()
 # sample_text_1 = ['I am hungry']
 # sample_text_2 = '<start> I am hungry <end>'
 
