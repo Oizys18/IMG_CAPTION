@@ -3,7 +3,7 @@
 *.pem
 
 ## Images ##
-./datasets/images/
+datasets/images/
 
 
 # Created by https://www.gitignore.io/api/venv,vuejs,django,python,pycharm,jupyternotebooks,visualstudiocode
