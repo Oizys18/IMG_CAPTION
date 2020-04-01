@@ -1,3 +1,11 @@
+### Data Load 
+
+```python 
+
+```
+
+
+
 ### Preprocessing
 
 #### Nomalization
@@ -57,6 +65,8 @@
 ---
 
 참고 
+
+[tensorflow tutorials](https://www.tensorflow.org/tutorials/images/data_augmentation?hl=ko)
 
 [모두를 위한 딥러닝 7-1](https://www.youtube.com/watch?v=oSJfejG2C3w&list=PLlMkM4tgfjnLSOjrEJN31gZATbcj_MpUm&index=20)
 

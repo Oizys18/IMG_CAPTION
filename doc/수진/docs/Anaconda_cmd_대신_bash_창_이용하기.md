@@ -51,7 +51,7 @@ conda deactivate
 # 패키지 설치 (한번에 가능)
 conda install git matplotlib scikit-learn scikit-learn scipy numpy tensorflow-gpu==2.0.0
 # 패키지 삭제 
-conda remove -n [가상 환경이름] --all
+conda remove -n [패키지이름] --all
 # 설치된 패키지 확인
 conda list 
 # 가상 환경 Export
