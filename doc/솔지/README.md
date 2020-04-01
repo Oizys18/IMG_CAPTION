@@ -137,7 +137,8 @@ stride 가 2라면 아웃풋은 3x3 피처 맵이 될 것이다.
 
 Max Pooling 은 가장 큰 값을 가져오는(==샘플링하는) 방법이다.
 
-최종 아웃풋을 완전 연결 신경망Fully Connected Neural Network 에 넣어서 결과를 얻을 수 있다.
+최종 아웃풋을 완전 연결 계층Fully Connected Layer에 넣어서 결과를 얻을 수 있다.
+(fully connected layer 는 앞에서 뽑아낸 특징들을 판단하는 역할을 한다.)
 
 
 
@@ -145,4 +146,6 @@ Max Pooling 은 가장 큰 값을 가져오는(==샘플링하는) 방법이다.
 [http://taewan.kim/post/cnn/#1-3-필터-filter-stride](http://taewan.kim/post/cnn/#1-3-%ED%95%84%ED%84%B0-filter-stride)
 [https://youtu.be/Em63mknbtWo](https://youtu.be/Em63mknbtWo)
 [https://youtu.be/2-75C-yZaoA](https://youtu.be/2-75C-yZaoA)
+
+
 
