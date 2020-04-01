@@ -5,7 +5,7 @@ jupyter notebook
 conda activate AI
 ```
 
-
+   s
 
 - numpy 차원 확장 및 축소 https://076923.github.io/posts/Python-numpy-9/
 

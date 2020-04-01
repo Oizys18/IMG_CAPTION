@@ -6,6 +6,7 @@ import pickle
 
 # Req. 3-1	이미지 경로 및 캡션 불러오기
 def get_path_caption(caption_file_path):
+
     return np.loadtxt(caption_file_path, delimiter='|', skiprows=1, dtype=np.str)
 
 
