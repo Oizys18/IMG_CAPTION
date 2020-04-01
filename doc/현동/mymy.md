@@ -40,13 +40,12 @@ conda activate AI
 
 
 
-
-
-
-
-
-
-
+- master
+  - hotfix
+- release
+  - bugfix
+- develop
+  - feature
 
 
 
