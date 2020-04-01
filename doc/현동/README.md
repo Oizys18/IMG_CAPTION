@@ -80,23 +80,21 @@
 
    
    
-
 2. 주어진 data 를 tokenizer에서 처리하려면 1차원으로 만들어주어야 합니다.
 
    ```python
    train_captions = np.squeeze(captions, axis=1)
-   print(train_captions.shape) # (158915,)
-   print(train_captions.ndim) # 1
+   print(captions.shape) # (158915,)
+   print(captions.ndim) # 1
    ```
 
    
    
-
 3. 캡션의 시작과 끝을 표현하기 위해 <start>, <end> 토큰을 추가해줍니다.
 
    ```python
-   train_captions = ['<start>' + cap + ' <end>' for cap in train_captions]
-   print(train_captions[:2])
+   train_captions = ['<start>' + cap + ' <end>' for cap in captions]
+   print(captions[:2])
    ```
 
    ```bash
@@ -106,7 +104,6 @@
 
    
    
-
 4. 빈도 순으로 정렬한 단어 집합 (Vocabulary) 만들기
 
    - num_words :  빈도수가 높은 상위 몇 개의 단어만 사용하겠다고 지정하는 값 (+1 : padding 을 제외하고 top_k 값이 되도록 하기 위해)
@@ -122,7 +119,6 @@
 
    
    
-
 5. `fit_on_texts` 빈도수를 기준으로 단어 집합을 생성합니다.
 
    ```python
@@ -146,8 +142,8 @@
    tokenizer.word_index['<pad>'] = 0
    tokenizer.index_word[0] = '<pad>'
    ```
-
-
+   
+   
 
 7. tokenizer 저장하기
 
@@ -180,7 +176,7 @@
 1. `texts_to_sequences`각 단어를 이미 정해진 벡터로 변환합니다.
 
    ```python
-   train_seqs = tokenizer.texts_to_sequences(train_captions)
+   train_seqs = tokenizer.texts_to_sequences(captions)
    print(train_seqs[:2])
    ```
 
@@ -223,16 +219,15 @@
 ```python
 import numpy as np
 import tensorflow as tf
-from sklearn.model_selection import train_test_split
 import pickle
 import json
 
 dataset_path = '../../../datasets/captions.csv'
 data = np.loadtxt(dataset_path, delimiter='|', dtype=np.str)
-train_captions = data[1:, 2:]
+captions = data[1:, 2:]
 
-train_captions = np.squeeze(train_captions, axis=1)
-train_captions = ['<start>' + cap + ' <end>' for cap in train_captions]
+captions = np.squeeze(captions, axis=1)
+captions = ['<start>' + cap + ' <end>' for cap in captions]
 
 top_k = 5000
 tokenizer = tf.keras.preprocessing.text.Tokenizer(num_words=top_k + 1,
@@ -240,13 +235,11 @@ tokenizer = tf.keras.preprocessing.text.Tokenizer(num_words=top_k + 1,
                                                   split=' ',
                                                   filters='!"#$%&()*+.,-/:;=?@[\]^_`{|}~ ')
 
-
-tokenizer.fit_on_texts(train_captions) 
-
+tokenizer.fit_on_texts(captions) 
 tokenizer.word_index['<pad>'] = 0
 tokenizer.index_word[0] = '<pad>'
 
-train_seqs = tokenizer.texts_to_sequences(train_captions) 
+train_seqs = tokenizer.texts_to_sequences(captions) 
 
 cap_vector = tf.keras.preprocessing.sequence.pad_sequences(train_seqs, padding='post')
 
@@ -261,14 +254,6 @@ with open('./tokenizer.json', 'w', encoding='utf-8') as f:
 with open('tokenizer.pickle', 'rb') as f:
     h = pickle.load(f)
 ```
-
-
-
-
-
-
-
-
 
 
 
