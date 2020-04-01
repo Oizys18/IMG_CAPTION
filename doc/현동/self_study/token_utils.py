@@ -12,7 +12,7 @@ def save_tokenizer(caption_file_path, caption_num_words):
     captions = ['<start>' + cap + ' <end>' for cap in captions]
 
     top_k = caption_num_words
-    tokenizer = tf.keras.preprocessing.text.Tokenizer(num_words=top_k + 3,
+    tokenizer = tf.keras.preprocessing.text.Tokenizer(num_words=top_k + 1,
                                                       oov_token="<unk>", lower=True,
                                                       split=' ',
                                                       filters='!"#$%&()*+.,-/:;=?@[\]^_`{|}~ ')
@@ -29,4 +29,8 @@ def save_tokenizer(caption_file_path, caption_num_words):
         f.write(json.dumps(tokenizer_json, ensure_ascii=False))
 
 
-save_tokenizer('../../../datasets/captions.csv')
+def get_tokenizer():
+    with open('../../../datasets/tokenizer.pickle', 'rb') as f:
+        tokenizer = pickle.load(f)
+    return tokenizer
+

@@ -12,8 +12,8 @@ print('------------train_captions import-------------')
 print(train_captions[:5, :])
 print()
 
-# print(train_captions.shape)
-# print(train_captions.ndim)
+print(train_captions.shape)
+print(train_captions.ndim)
 train_captions = np.squeeze(train_captions, axis=1)
 stime = time.time()
 for i in range(len(train_captions)):
@@ -26,8 +26,8 @@ print(etime-stime)
 print()
 print('------------add <start> and <end> token-------------')
 print(train_captions[:5])
-# print(train_captions.shape)
-# print(train_captions.ndim)
+print(train_captions.shape)
+print(train_captions.ndim)
 print()
 
 
@@ -50,11 +50,11 @@ def calc_max_length(tensor):
 # Choose the top 5000 words from the vocabulary
 top_k = 5000
 # num_words :  빈도수가 높은 상위 몇 개의 단어만 사용하겠다고 지정
-# + 3 : padding & OOV 때문에
+# + 1 : padding 때문에
 # oov : 케라스 토크나이저는 기본적으로 단어 집합에 없는 단어인 OOV에 대해서는
 # 단어를 정수로 바꾸는 과정에서 아예 단어를 제거한다는 특징이 있습니다.
 # 단어 집합에 없는 단어들은 OOV로 간주하여 보존하고 싶다면 Tokenizer의 인자 oov_token을 사용합니다.
-tokenizer = tf.keras.preprocessing.text.Tokenizer(num_words=top_k + 3,
+tokenizer = tf.keras.preprocessing.text.Tokenizer(num_words=top_k + 1,
                                                   oov_token="<unk>", lower=True,
                                                   split=' ',
                                                   filters='!"#$%&()*+.,-/:;=?@[\]^_`{|}~ ')
@@ -95,7 +95,7 @@ max_length = calc_max_length(train_seqs)
 cap_train, cap_val = train_test_split(cap_vector,
                                       test_size=0.2,
                                       random_state=0)
-# print(cap_vector[:3])
+print(cap_vector[:3])
 # print(cap_train[:3])
 # print(cap_train.shape)
 # print(len(cap_train), len(cap_val))

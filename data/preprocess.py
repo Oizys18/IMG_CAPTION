@@ -69,3 +69,8 @@ def get_tokenizer():
     with open('../datasets/tokenizer.pickle', 'rb') as f:
         tokenizer = pickle.load(f)
     return tokenizer
+
+
+# 3-1 tf.data.Dataset 생성
+def get_dataset(image_file_path, caption_file_path):
+    pass
