@@ -7,13 +7,13 @@ from utils import utils
 utils.save_config()
 
 # 이미지 경로 및 캡션 불러오기
-dataset = preprocess.get_path_caption(config.caption_file_path)
+# dataset = preprocess.get_path_caption(config.caption_file_path)
 
 # 전체 데이터셋을 분리해 저장하기
-train_dataset_path, test_dataset_path = preprocess.dataset_split_save(dataset, config.test_size, config.random_state)
+# train_dataset_path, test_dataset_path = preprocess.dataset_split_save(dataset, config.test_size, config.random_state)
 
 # tokenizer 만들기
-preprocess.save_tokenizer(train_dataset_path)
+# preprocess.save_tokenizer(train_dataset_path)
 
 
 # 저장된 데이터셋 불러오기

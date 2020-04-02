@@ -54,7 +54,7 @@ def save_tokenizer(data_path, caption_num_words=5000):
     tokenizer.fit_on_texts(captions)
     tokenizer.word_index['<pad>'] = 0
     tokenizer.index_word[0] = '<pad>'
-    print(tokenizer.index_word)
+
     with open('./datasets/tokenizer.pkl', 'wb') as f:
         pickle.dump(tokenizer, f, protocol=pickle.HIGHEST_PROTOCOL)
 
