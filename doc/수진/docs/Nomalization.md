@@ -34,7 +34,7 @@
   $$
   
 
-직접 수식을 구현 해도 되지만 많은 라이브러리에서 스케일링 함수를 지원 한다 : [sckit-learn](https://scikit-learn.org/stable/modules/preprocessing.html/)
+직접 수식을 구현 해도 되지만 많은 라이브러리에서 스케일링 함수를 지원 한다 : [sckit-learn](https://scikit-learn.org/stable/modules/preprocessing.html)
 
 - `scale` 함수는 zero mean, unit variance를 가지는 분포로 데이터를 scaling 해준다. (axis=0 이 default)
 
