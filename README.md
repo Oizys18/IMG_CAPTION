@@ -1,11 +1,33 @@
 # README
 
-- SSAFY 2기 서울 4반 5팀 
-- Sub02
-
 
 
 ## Dev_Notice
+
+#### updated - 2020.04.02
+
+- Mod config.py
+  - config.py 에 각 변수마다 default 값을 할당해두었습니다.
+  - train.py 파일 실행시 terminal 에서 `python train.py` 만 입력하면 됩니다. 
+  - 주어진 captions.csv 파일을 불러와서 train / val dataset 으로 분리하는 과정(sub01)은 실행되지 않습니다. (주석처리)
+  - 미리 만들어 둔 train_dataset.npy 파일만 읽어오고 실행시킵니다.
+  - config.csv 파일은 datasets 폴더에 그대로 두었습니다. gitignore 에 등록해두었습니다.
+
+- Add train_dataset.npy && val_dataset.npy 
+  - captions.csv 파일을 8:2 비율로 **섞지않고**(이미지 1개+캡션 5개 고정) 나눠서 만들어두었습니다. 
+  - 자료 구조를 확인할 수 있게 csv 파일도 함께 만들어두었습니다.
+
+- Add tokenizer.pkl
+  - train, val_dataset 과 마찬가지로 sub02 - req 2 에 따른 정적파일입니다. 
+- 요약
+  - train_dataset.npy, val_dataset.npy, tokenizer.pkl 과 같이 datasets 에 있는 파일은 고정입니니다!
+  - 따로 이야기가 나오기 전까지 수정, 변경사항이 있으면 꼭 공유해주세요~
+
+
+
+---
+
+#### 
 
 #### Branch
 
