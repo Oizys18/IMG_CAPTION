@@ -23,7 +23,17 @@
   - train_dataset.npy, test_dataset.npy, tokenizer.pkl 과 같이 datasets 에 있는 파일은 고정입니니다!
   - 따로 이야기가 나오기 전까지 수정, 변경사항이 있으면 꼭 공유해주세요~
 
++
 
+- 가상환경 설정
+  - 본인의 가상환경 삭제
+    conda env remove -n [가상 환경의 이름]
+  - 리스트 확인
+    conda env list
+  - 찬우의 가상환경으로 설정
+    conda env create -f [가상 환경의 이름].yaml
+
+  
 
 ---
 
