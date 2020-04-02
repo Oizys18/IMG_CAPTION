@@ -5,7 +5,25 @@ jupyter notebook
 conda activate AI
 ```
 
-   s
+-  20200402
+
+https://www.tensorflow.org/tutorials/text/word_embeddings
+
+https://www.tensorflow.org/api_docs/python/tf/data/Dataset#map
+
+https://github.com/GunhoChoi/PyTorch-FastCampus/blob/master/05_RNN/0_Basic/Simple_Char_RNNcell.ipynb
+
+https://wikidocs.net/book/2155
+
+https://www.tensorflow.org/tutorials/text/image_captioning
+
+
+
+- Allocator (GPU_0_bfc) ran out of memory trying to allocate  https://eehoeskrap.tistory.com/360 
+
+- Tennsorflow v2 Limit GPU Memory usage https://github.com/tensorflow/tensorflow/issues/25138
+
+
 
 - numpy 차원 확장 및 축소 https://076923.github.io/posts/Python-numpy-9/
 
