@@ -14,13 +14,13 @@
   - config.csv 파일은 datasets 폴더에 그대로 두었습니다. gitignore 에 등록해두었습니다.
 
 - Add train_dataset.npy && val_dataset.npy 
-  - captions.csv 파일을 8:2 비율로 **섞지않고**(이미지 1개+캡션 5개 고정) 나눠서 만들어두었습니다. 
+  - captions.csv 파일을 7:3 비율로 **섞지않고**(이미지 1개+캡션 5개 고정) 나눠서 만들어두었습니다. 
   - 자료 구조를 확인할 수 있게 csv 파일도 함께 만들어두었습니다.
 
 - Add tokenizer.pkl
-  - train, val_dataset 과 마찬가지로 sub02 - req 2 에 따른 정적파일입니다. 
+  - train, test_dataset 과 마찬가지로 sub02 - req 2 에 따른 정적파일입니다. 
 - 요약
-  - train_dataset.npy, val_dataset.npy, tokenizer.pkl 과 같이 datasets 에 있는 파일은 고정입니니다!
+  - train_dataset.npy, test_dataset.npy, tokenizer.pkl 과 같이 datasets 에 있는 파일은 고정입니니다!
   - 따로 이야기가 나오기 전까지 수정, 변경사항이 있으면 꼭 공유해주세요~
 
 
