@@ -109,7 +109,7 @@ output:
       [156 186 122]
       [191 200 153]
       [106 126  65]]]
-    
+
 
 
 
@@ -241,6 +241,35 @@ TypeError: data type not understood
 
 
 
+``````python
+image = tf.constant(img, dtype=tf.float32) 
+
+mean, var = tf.nn.moments(image, axes=[0, 1, 2])
+centered = (image - mean) / var**0.5
+# print((image - mean) / var**0.5)
+plt.imshow(centered)
+plt.show
+
+img2 = tf.image.per_image_standardization(image)
+# print(img2)
+plt.imshow(img2)
+plt.show()
+``````
+
+위에서 계속 텐서플로우 함수 안에 이미지를 넣지 못했는데, 방법을 찾아서 구해보았다.
+
+`tf.constant()` 로 텐서플로우 자료형으로 만든 뒤 처리하면 된다.
+
+`tf.nn.moments()` 로 평균과 분산을 구해서 계산하거나, 
+
+`tf.image.per_image_standardization()` 으로 바로 정규화 시키거나 동일한 결과를 얻을 수 있다.
+
+https://www.tensorflow.org/versions/r1.15/api_docs/python/tf/nn/moments
+
+https://www.tensorflow.org/api_docs/python/tf/image/per_image_standardization
+
+
+
 ### 넘파이로 평균, 분산 구하기
 
 ```python
@@ -254,7 +283,7 @@ for f in img_path:
     mean = np.mean(image, axis=(0, 1))
     var = np.var(image, axis=(0, 1))
     print(mean, var)
-    image2 = ((image[0, 1] - mean) / var)
+    image2 = ((image[0, 1] - mean) / var**0.5)
 ```
 
 output: 
@@ -264,7 +293,9 @@ output:
     [ 89.13399462 110.94199154  71.80461361] [5155.57000392 5154.66514713 4471.48602254]
     [151.85550173 151.94119185 150.38023837] [5212.37096954 5264.52403103 5199.35661063]
 
-`axis=(0, 1)` 을 넣으면 R, G, B 각각의 값을, `axis=(0, 1, 2)` 는 RGB 를 한번에 계산한다.
+~~`axis=(0, 1)` 을 넣으면 R, G, B 각각의 값을, `axis=(0, 1, 2)` 는 RGB 를 한번에 계산한다.~~
+
+여전히 (0, 1) 과 (0, 1, 2) 가 이미지 R, G, B 에서 어떻게 다른지 헷갈린다.
 
 이 부분이 이해가 잘 안돼서 아래처럼 간단한 배열로 테스트했다.
 
