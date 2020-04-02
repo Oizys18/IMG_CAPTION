@@ -24,6 +24,7 @@
 ### 주요 특징
 
 1. Convolution filter의 채널은 convolution layer의 채널 수와 같다. 
+
 2. Output feature maps의 채널은 사용한 Convolution filter의 갯수와 같다.
 
 - 이미지 데이터는 높이X너비X채널의 3차원 텐서 (tensor)로 표현될 수 있다. 만약, 이미지의 색상이 RGB 코드로 표현되었다면, 채널의 크기는 3이 되며 각각의 채널에는 R, G, B 값이 저장된다. (흑백일 경우 channel은 1, 만약 이미지가 아닐경우 channel이 큰 수일 수도 있다.)
