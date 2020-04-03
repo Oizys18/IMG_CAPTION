@@ -24,7 +24,7 @@
   - 이미지에서 물체의 형태를 인지하거나 색깔을 구별하는 등 "특성"을 뽑아내는 데 사용된다
 - RNN - 순서가 있는 데이터에 적합한 순환 신경망
   - 뽑아낸 특성을 바탕으로 문장을 생성한다
-- 이 두 모델을 합쳐 Image Captioning 모델 구현
+- 이 두 모델을 합쳐 Image Captioning 모델을 구현한다.
 
 ## 2. 프로젝트 목표
 
@@ -40,13 +40,41 @@
 
 ## 3. 필수 지식 학습
 
+### 이미지 처리
+
+#### CNN
+
+##### [기본 연산들](https://excelsior-cjh.tistory.com/180)
+
+- 컨볼루션 신경망이 사용되는 다양한 연산들에 대한 설명
+
+##### [강의 및 텐서훌로우 예시 코드](https://www.youtube.com/watch?v=9fldE3-yJpg&list=PLQ28Nx3M4Jrguyuwg4xe9d9t2XE639e5C&index=34)
+
+- 컨볼루션 연산에 대한 설명과 이를 텐서훌로우로 구현하는 방법
+
+##### [강의 및 화이토치 예시 코드](https://www.youtube.com/watch?v=rySyghVxo6U&list=PLQ28Nx3M4JrhkqBVIXg-i5_CVVoS1UzAv&index=19)
+
+- 컨볼루션 연산에 대한 설명과 이를 파이토치로 구현하는 방법
+
+#### CNN 모델
+
+##### [주요 모델들](https://github.com/GunhoChoi/PyTorch-FastCampus/blob/master/04_CNN_Advanced/CNN_Advanced.pdf)
+
+- 이미지넷 대회에 나온 다양한 모델들
+
+##### [이미지넷 챌린지 및 발전 과정](https://github.com/GunhoChoi/PyTorch-FastCampus/blob/master/04_CNN_Advanced/CNN_Advanced.pdf)
+
+- 이미지넷 대회에 나온 모델들이 발전해온 과정
+
+##### [DenseNet](https://www.youtube.com/watch?v=fe2Vn0mwALI)
+
+- 덴스넷 모델에 대한 설명
+
 ### 자연어 처리
 
 #### NLP
 
-##### 토큰화
-
-[딥 러닝을 이용한 자연어 처리 입문](https://wikidocs.net/21698)
+##### [토큰화](https://wikidocs.net/21698)
 
 - **말뭉치 또는 코퍼스(corpus)**
 
@@ -66,11 +94,9 @@
 
   - 단어 토큰화 과정에서 각 단어가 어떤 품사로 쓰였는지를 구분해놓는 것
 
-##### 정수 인코딩
+##### [정수 인코딩](https://wikidocs.net/31766)
 
-케라스의 텍스트 전처리
-
-[딥 러닝을 이용한 자연어 처리 입문](https://wikidocs.net/31766)
+- 케라스의 텍스트 전처리
 
 - 각 단어를 고유한 정수에 맵핑
 
@@ -86,27 +112,19 @@
 
 - 단어 집합의 크기를 벡터의 차원으로 하고, 표현하고 싶은 단어의 인덱스에 1의 값을 부여하고, 다른 인덱스에는 0을 부여하는 단어의 벡터 표현 방식
 
-##### 임베딩
+##### [임베딩](https://subinium.github.io/Keras-6-1/)
 
-[keras_practice](keras_practice.ipynb)
-
-정수 인코딩 된 벡터를 임베딩하는 방법
-
-https://subinium.github.io/Keras-6-1/
+- 정수 인코딩 된 벡터를 임베딩하는 방법
 
 #### RNN
 
-##### 순환 신경망 기초
+##### [순환 신경망 기초](https://excelsior-cjh.tistory.com/183?category=940400)
 
-순환 신경망에 대한 기본적인 설명과 예시 코드
+- 순환 신경망에 대한 기본적인 설명과 예시 코드
 
-https://excelsior-cjh.tistory.com/183?category=940400
-
-##### LSTM & GRU
+##### [LSTM & GRU](https://datascienceschool.net/view-notebook/770f59f6f7cc40c8b6dc98dddd06c6c5/)
 
 기본 RNN 을 개선한 LSTM 과 GRU 에 대한 설명
-
-https://datascienceschool.net/view-notebook/770f59f6f7cc40c8b6dc98dddd06c6c5/
 
 ### 이미지 캡셔닝 프로젝트 아키텍처
 
@@ -128,7 +146,7 @@ https://datascienceschool.net/view-notebook/770f59f6f7cc40c8b6dc98dddd06c6c5/
 
 - tokenize 에 사용한 tokenizer 객체를 pickle 에 저장
 
-![req2](req2.jpg)
+![req2](img/req2.jpg)
 
 ###### 한 번만 시행해도 되는 전처리
 
@@ -136,43 +154,55 @@ https://datascienceschool.net/view-notebook/770f59f6f7cc40c8b6dc98dddd06c6c5/
 
   - csv 파일을 토대로 실제 이미지 경로와 "이미지에 해당하는 토큰화된 캡션"을 묶는다.
 
-- 전체 데이터셋을 분할한다.
+- 전체 데이터셋을 분할한다. (모델에 입력으로 전달할 때 유용하도록)
 
-  - 학습용, 테스트용 데이터로 분할해서 저장해 놓는다.
+  - 학습용, 테스트용 데이터로 분할해서 저장해 놓는다. (`train_dataset.npy`, `test_dataset.npy`)
 
-  - 어떤 단어가 토큰에 해당하는지 맵핑된 정보를 기록해놓은 토크나이저 또한 저장한다.
+- 어떤 단어가 토큰에 해당하는지 맵핑된 정보를 기록해놓은 토크나이저 또한 저장한다. (`tokenizer.pkl`)
 
-  - pre-trained?
+- pre-trained model 을 이용해 미리 이미지의 특성을 뽑을 수도 있다.
 
 ###### 매번 진행하는 전처리
 
-- 학습하는지 또는 테스트를 진행하는지 따라 데이터셋(이미지 경로와 토큰화된 캡션 있음) 다른 것 불러오고 // 토크나이저도 불러온다.
+- train / test 여부에 따라 (이미지 경로와 토큰화된 캡션 담긴) 데이터셋를 불러오고
 
-- 데이터셋에는... 이미지 경로와 토큰화된 캡션 있음... 실제 이미지 데이터와 토큰화된 캡션을 바인딩해서 텐서플로우 데이터셋으로 만든다.
+  - `train_dataset.npy`, `test_dataset.npy`
 
-- 텐서플로우 데이터셋을 만드는 과정에서 / 데이터 랜덤성 추가를 위해 데이터의 순서를 바꾸기도 하고 이미지의 경우 뒤집거나... 한다.
+- 토크나이저도 불러온다.
 
-- 단, 훈련할 때만 적용한다는 뜻인듯? 테스트시에는 순서 바꾸기, Aug 안 들어가게 구현한다.
+  - `tokenizer.pkl`
+
+- 데이터셋(`.npy`)에는 1. 이미지 경로와 2. 토큰화된 캡션 있음
+
+  - 1'. 실제 이미지 데이터와 2. 토큰화된 캡션을 바인딩해서 텐서플로우 데이터셋(`tf.data.dataset`)으로 만든다.
+
+  - 텐서플로우 데이터셋을 만드는 과정에서 데이터 랜덤성을 추가하기 위해 데이터의 순서를 바꾸기도 하고, 이미지 데이터의 경우 Augmentation 을 많이 사용한다.
+
+    - 단, test 일 경우 데이터 순서 바꾸기, 이미지 Augmentation이 들어가지 않게 구현한다.
 
 ##### 2) 학습 과정
 
-- `tf.data.Dataset` 에는 Encoder 의 입력이 되는 이미지 데이터 또는 미리 뽑힌 특성 벡터가 들어 있음. 토큰화된 캡션도 쌍으로 들어 있음.
+- 전처리 과정을 통해 `tf.data.Dataset` 을 전달받는다.
 
-- 이미지 데이터 또는 미리 뽑힌 특성 벡터는 Enocder에 들어가 Decoder 의 입력 형식에 맞게 변환되어 나온다.
+- `tf.data.Dataset` 에는 Encoder 의 입력이 되는 1. 이미지 데이터 또는 2. 미리 뽑힌 특성 벡터가 들어 있다. 토큰화된 캡션도 쌍으로 들어 있다.
+
+- `1.`이미지 데이터 또는 2. 미리 뽑힌 특성 벡터는 Encoder 에 들어가 Decoder 의 입력 형식에 맞게 변환되어 나온다.
 
 - Encoder 의 결과값은 Decoder 로 전달된다. 이와 동시에 `<start>` 토큰의 인덱스가 Decoder 로 전달된다.
 
 - Decoder 는 순차적으로 이미지를 묘사하는 문장의 단어들을 생성한다.
 
-- 이 때 단어들은 토큰의 가지 수만큼 길이를 가지는 벡터로 나온다.
+  - 이때 단어들은 토큰의 가지 수만큼 길이를 가지는 벡터로 나온다.
 
-- 이 결과값을 정답 캡션과 비교해 손실을 계산한다
+- 이 결과값을 정답 캡션(그림7의 Tokenized Caption) 과 비교해 손실을 계산한다.
 
 - 이 손실을 기반으로 모델의 변수들을 학습하여 최적화를 진행한다.
 
 ##### 3) 테스트 과정
 
----
+- 모델이 학습되고 나면 체크포인트 매니저를 이용해 학습된 Encoder와 Decoder의 변수들을 불러와 테스트 이미지에 대한 예측 캡션을 생성할 수 있다.
+
+- 이미지 데이터가 전달되어 캡션이 생성되는 과정까지는 학습과 동일하지만 결과 문장을 사람이 해석할 수 있게 바꿔주는 과정이 추가로 진행된다.
 
 ### 모두를 위한 딥러닝 입문 시즌2 - Tensorflow
 
