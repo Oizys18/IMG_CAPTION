@@ -1,4 +1,5 @@
 # README
+![](https://img.shields.io/badge/version-1.0.0-green.svg) ![](https://img.shields.io/badge/created__at-20.04.03-yellow.svg) ![](https://img.shields.io/badge/updated__at-20.04.03-blue.svg)
 
 - 특화프로젝트 "이미지 캡셔닝 활용 시스템"  Sub PJT 2 : 이미지 캡셔닝 기능 구현
 
