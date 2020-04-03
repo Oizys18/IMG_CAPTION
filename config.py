@@ -9,6 +9,7 @@ parser.add_argument('--do_what', type=str, default='train', help='학습(train)�
 parser.add_argument('--test_size', type=int, default=0.2, help='테스트로 나눌 비율')
 parser.add_argument('--random_state', type=int, default=918273645, help='shuffle 난수')
 parser.add_argument('--do_sampling', type=int, help='샘플링 갯수')
+parser.add_argument('--normalize', action='store_false', help="정규화 여부")
 config = parser.parse_args()
 
 print(config.do_what + '_dataset 을 실행시킵니다.')
