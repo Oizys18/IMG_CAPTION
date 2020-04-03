@@ -1,90 +1,59 @@
 # README
 
+- 특화프로젝트 "이미지 캡셔닝 활용 시스템"  Sub PJT 2 : 이미지 캡셔닝 기능 구현
+
+- SSAFY 2기 4반 5팀 : 김수민, 양찬우, 이수진, 조현동, 최솔지 
 
 
-## Dev_Notice
 
-#### updated - 2020.04.02
+## 🔊 목표
 
-- Mod config.py
-  - config.py 에 각 변수마다 default 값을 할당해두었습니다.
-  - train.py 파일 실행시 terminal 에서 `python train.py` 만 입력하면 됩니다. 
-  - 주어진 captions.csv 파일을 불러와서 train / val dataset 으로 분리하는 과정(sub01)은 실행되지 않습니다. (주석처리)
-  - 미리 만들어 둔 train_dataset.npy 파일만 읽어오고 실행시킵니다.
-  - config.csv 파일은 datasets 폴더에 그대로 두었습니다. gitignore 에 등록해두었습니다.
+- Sub2 PRJ 스프린트 #2  `ver.1.0.0`
+  - 컨볼루션 신경망과 순환 신경망을 이해하고 명세에 따라 기능을 구현합니다.
+  - 프로젝트 환경을 구성하고 공유합니다.
+  
+    
 
-- Add train_dataset.npy && val_dataset.npy 
-  - captions.csv 파일을 7:3 비율로 **섞지않고**(이미지 1개+캡션 5개 고정) 나눠서 만들어두었습니다. 
-  - 자료 구조를 확인할 수 있게 csv 파일도 함께 만들어두었습니다.
+## 💻 구현 내용
 
-- Add tokenizer.pkl
-  - train, test_dataset 과 마찬가지로 sub02 - req 2 에 따른 정적파일입니다. 
-- 요약
-  - train_dataset.npy, test_dataset.npy, tokenizer.pkl 과 같이 datasets 에 있는 파일은 고정입니니다!
-  - 따로 이야기가 나오기 전까지 수정, 변경사항이 있으면 꼭 공유해주세요~
+1. 이미지 데이터 전처리
+   1. 이미지 파일 로드
+   2. 이미지 정규화
+2. 텍스트 데이터 전처리
+   1. Tokenizer 저장 및 불러오기
+   2. 텍스트 데이터 토큰화 
 
-+
+3. Dataset 관리
+   1. train_dataset.npy && test_dataset.npy 
+      - captions.csv 파일을 7:3 비율로 **섞지않고**(이미지 1개+캡션 5개 고정) 나누어서 저장해두었습니다. 
+      - 자료 구조를 확인할 수 있게 csv 파일도 함께 만들어두었습니다.
+      - 이에 따라 아래 Quick Start 는 train_datasets 파일을 불러오고, 사용하여 결과를 보입니다.
+
+
+
+## 🚀 Quick Start
 
 - 가상환경 설정
-  - 본인의 가상환경 삭제
-    conda env remove -n [가상 환경의 이름]
-  - 리스트 확인
-    conda env list
-  - 찬우의 가상환경으로 설정
-    conda env create -f [가상 환경의 이름].yaml
+
+  ```
+  conda env create -f AI.yaml
+  ```
 
   
 
----
-
-#### 
-
-#### Branch
-
-- master 
-
-- release
-
-- develop  
-  - feature branches
-  - front / back / ML / DB 
-  - ex) develp >> back >> feature: `back/auth/login`
-
-- developer
-  - personal branches - 개인적으로 필요시 파일 공유, 저장 및 관리 
-  - ex) `soulG/conf`
-
-
-
-#### Commit message
-
-- https://blog.ull.im/engineering/2019/03/10/logs-on-git.html 참고
-
-- Convention 
-  - 기본
-    - modify  : 코드 수정
-    - add  : 새 파일 작성
-    - delete : 코드 및 파일 삭제
-  - 전면 수정
-    - refactor  
-  - 버전 관리
-    - update
-
-- shift enter 누르고 내용을 작성하면 아래처럼 `...` 로 요약 된 커밋 메시지를 남길 수 있습니다~
-
-  ![](./doc/images/commit1.PNG)
-
-  ![](./doc/images/commit2.PNG)
+- 텍스트 데이터 전처리
 
   ```
-  $ commit -m 'message file.exe feature
-  [shift enter]
-  > detail message (여기는 한글 or 영어)'
+  python doc/tokenizer_sample.py
   ```
 
-  ```bash
-  'modify users.py login  
-  로그인시 쿠키 발급 추가
-  '
-  ```
+  - datasets/ 아래에 tokenizer_sample.pkl 파일이 저장됩니다.
+  - 저장 된 tokenizer 를 불러와 주어진 caption 을 토큰화 하고, sample 로 두 개 출력합니다.
 
+
+
+
+
+## 💥 Notice
+
+- train.py, config.py 에 구현 된 내용은 Sub01 과 동일한 결과물이며, 정상적으로 기능하나, 위의 Quick Start 만 실행하시기를 권장드립니다.

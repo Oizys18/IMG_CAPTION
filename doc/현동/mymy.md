@@ -71,3 +71,32 @@ https://www.tensorflow.org/tutorials/text/image_captioning
 
 
 
+**Sub2 스프린트#2 프로젝트 마무리** `~16:30`
+
+1. Jira > Issues 완료된 이슈(이슈 > 미해결 이슈 > Epic 포함)만 완료로 처리 하기
+2. 스프린트 완료 처리하기(미해결 이슈는 다음 백로그로 자동 이동됨-계획이 왜 잘못되었는지도 고민)
+3. 코드 정리 (Polish code)불필요한 내용들 정리 및 .gitignore 에 등록빌드된 폴더: node_modules, dist, build, target, checkpoints로그/임시파일, .settings, .idea, **pycache** 등등...Lint 적용: flake8, pep8사용되지 않는 import, 변수, 함수, class 정리
+4. 코드 리펙토링폴더구조, 파일명, 클래스명이 명확한지 확인반복/제어문이 깊어지면(indent) 함수로 분리하기주석이 작성되었다면 변수나 함수명을 명확히 해서 주석이 없이도 이해할 수 있도록 하기
+5. 프로젝트 사용법 작성(README.md)Overview-프로젝트 설명, Prerequisites, Installation, Usage(Pretrained model, Training, Inference)방법들 등등..License 설정작성 참고: https://github.com/jcjohnson/densecap
+6. 최종 산출물Gitlab(Sub1 Req관련 프로젝트 소스, READEME.md)
+
+**스프린트 검토회의(고객에게 제품을 데모시연,리뷰)** `16:30 ~ 17:00`
+
+- 팀별 랜덤으로 진행예정
+- develop 에 머지에서 시연
+
+**제품 출시** `17:00 ~`
+
+1. 기본 브랜치 master 로 변경 후 develop -> master 브랜치로 머지하기
+2. "master" 브랜치에 version tagging(ex: v1.0.0), 내용에 릴리즈 노트 작성하기 노트작성 참고: https://github.com/spring-projects/spring-boot/releases
+3. Gitlab 프로젝트 정보 업데이트: 설정 > 일반 > General projectProject description : 프로젝트 한줄 설명Tags: 프로젝트 태깅 ex) python, ai, tensorflow, deep-learning, rnn, cnn, image-captioning
+
+**팀내 스프린트 회고회의** `~18:00`
+
+- 팀장 주도하에 줌을 통해 회의를 개설하여 각자 이번 프로젝트시 1.잘하거나 좋았던 점, 2. 힘들었거나 아쉬웠던 점, 3. 개선할 점 말하고 메러모스트 팀방에 남기기
+- 서기1명이 Gitlab 프로젝트에 해당 내용들 취합해서 Gitlab > Wiki 에 마크다운으로 위 3가지 항목으로 남기기
+
+
+
+
+
