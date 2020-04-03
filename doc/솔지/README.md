@@ -18,9 +18,9 @@
 
 다음과 같이 세 부분으로 나눠 정리했다.
 
-- [프로젝트 개념 정리](./프로젝트 개념 정리 .md)
-- [이미지 정규화, 배열](./이미지 정규화, 배열.md)
-- [image_normalization_test](image_normalization_test. md)
+- [프로젝트 개념 정리](./doc/솔지/프로젝트 개념 정리 .md)
+- [이미지 정규화, 배열](./doc/솔지/이미지 정규화, 배열.md)
+- [image_normalization_test](./doc/솔지/image_normalization_test. md)
 
 
 
