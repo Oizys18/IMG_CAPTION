@@ -39,7 +39,20 @@
   conda env create -f AI.yaml
   ```
 
-  
+
+
+
+- 이미지 데이터 전처리
+
+  ```
+  python doc/image_normalization_test.py
+  ```
+
+  - 정규화를 한 이미지를 보여줍니다.
+
+  - 자세한 내용은 doc/'이미지 정규화, 배열'.md 파일을 참고해 주세요.
+
+    
 
 - 텍스트 데이터 전처리
 
@@ -49,6 +62,7 @@
 
   - datasets/ 아래에 tokenizer_sample.pkl 파일이 저장됩니다.
   - 저장 된 tokenizer 를 불러와 주어진 caption 을 토큰화 하고, sample 로 두 개 출력합니다.
+  - 자세한 내용은 doc/'텍스트 전처리 토큰화'.md 파일을 참고해 주세요.
 
 
 
