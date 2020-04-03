@@ -23,12 +23,12 @@ def save_tokenizer(captions, caption_num_words=5000):
     tokenizer.index_word[0] = '<pad>'
 
     print('%s개의 토큰을 가진 Tokenizer 를 저장합니다.' % len(tokenizer.word_index))
-    with open('../datasets/tokenizer_sample.pkl', 'wb') as f:
+    with open('./datasets/tokenizer_sample.pkl', 'wb') as f:
         pickle.dump(tokenizer, f, protocol=pickle.HIGHEST_PROTOCOL)
 
 
 def change_word_to_vector(captions):
-    with open('../datasets/tokenizer_sample.pkl', 'rb') as f:
+    with open('./datasets/tokenizer_sample.pkl', 'rb') as f:
         tokenizer = pickle.load(f)
 
     train_seqs = tokenizer.texts_to_sequences(captions)
@@ -37,7 +37,7 @@ def change_word_to_vector(captions):
     print(cap_vector[:2])
 
 
-caption_dataset = get_captions('../datasets/test_datasets.csv')
+caption_dataset = get_captions('./datasets/test_datasets.csv')
 save_tokenizer(caption_dataset)
 print()
 change_word_to_vector(caption_dataset)

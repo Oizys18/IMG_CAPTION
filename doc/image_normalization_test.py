@@ -5,11 +5,11 @@ import matplotlib.pyplot as plt
 
 
 def get_data_file():
-    data = np.load('../datasets/test_datasets.npy')
+    data = np.load('./datasets/test_datasets.npy')
     img_paths = data[:50, :1]
     captions = data[:50, 2:]
     train_images = np.squeeze(img_paths, axis=1)
-    train_images = ['../datasets/images/' + img for img in train_images]
+    train_images = ['./datasets/images/' + img for img in train_images]
     train_captions = np.squeeze(captions, axis=1)
     train_captions = ['<start>' + cap + ' <end>' for cap in train_captions]
     train_images = list(set(train_images))  # 테스트를 위한 중복제거
@@ -46,6 +46,7 @@ def img_normalization_2(img):
 
 train_images, train_captions = get_data_file()
 
+train_images = train_images[:2]
 for train_image in train_images:
     img, image_path = image_load(train_image)
     images1 = img_normalization_1(image_path)
