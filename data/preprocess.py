@@ -60,7 +60,7 @@ def save_tokenizer(data_path, caption_num_words=5000):
 
 
 def get_tokenizer():
-    with open('./datasets/tokenizer.pickle', 'rb') as f:
+    with open('./datasets/tokenizer.pkl', 'rb') as f:
         tokenizer = pickle.load(f)
     return tokenizer
 

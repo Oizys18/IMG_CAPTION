@@ -6,7 +6,7 @@ import json
 
 def save_tokenizer(caption_file_path, caption_num_words):
     data = np.loadtxt(caption_file_path, delimiter='|', dtype=np.str)
-    captions = data[1:, 2:]
+    captions = data[:, 2:]
 
     captions = np.squeeze(captions, axis=1)
     captions = ['<start>' + cap + ' <end>' for cap in captions]
