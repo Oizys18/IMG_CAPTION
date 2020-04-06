@@ -39,7 +39,7 @@ def sampling_data(img_paths, captions, do_sampling):
 
 
 def save_tokenizer(data_path, caption_num_words=5000):
-    data = np.loadtxt('./datasets/train_datasets.csv', delimiter='|', skiprows=1, dtype=np.str)
+    data = np.load(data_path)
     captions = data[:, 2:]
 
     captions = np.squeeze(captions, axis=1)
