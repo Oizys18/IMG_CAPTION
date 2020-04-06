@@ -1,4 +1,4 @@
-# Req 3.  Dataset 생성
+# Req 3. Dataset 생성
 
 ## Reference
 
@@ -25,32 +25,27 @@
            [   3,    2,  175, ...,    0,    0,    0]], dtype=int32)
     ```
 
-- train 용 / test 용 데이터를 분할하는 함수에서 리턴값의 data type은 각각 `<class 'list'>` `<class 'numpy.ndarray'> ` 이다.
+- train 용 / test 용 데이터를 분할하는 함수에서 리턴값의 data type은 각각 `<class 'list'>` `<class 'numpy.ndarray'>` 이다.
 
   ```python
-img_name_train, img_name_val, cap_train, cap_val = train_test_split(img_name_vector,
+  img_name_train, img_name_val, cap_train, cap_val = train_test_split(img_name_vector,
                                                                       cap_vector,
                                                                       test_size=0.2,
                                                                       random_state=0)
   ```
-  
+
   - img_name_train 예
-  
+
     ```python
     ['./dataset/images/__________.jpg',
      './dataset/images/__________.jpg',
-   './dataset/images/__________.jpg',
-     
-    ```
-  
-   ...
-  
+     './dataset/images/__________.jpg',
      './dataset/images/__________.jpg',
      './dataset/images/__________.jpg',]
     ```
-  
+
   - `cap_train` 예
-  
+
     ```python
     array([[  3,  29,  53, ...,   0,   0,   0],
            [  3,   1, 212, ...,   0,   0,   0],
@@ -79,14 +74,16 @@ features_shape = 2048
 attention_features_shape = 64
 ```
 
-#### `tf.data.Dataset` 
+#### `tf.data.Dataset`
 
 ```python
 dataset = tf.data.Dataset.from_tensor_slices((img_name_train, cap_train))
 print(dataset)
 ```
 
->  <TensorSliceDataset shapes: ((), (49,)), types: (tf.string, tf.int32)>
+```bash
+ <TensorSliceDataset shapes: ((), (49,)), types: (tf.string, tf.int32)>
+```
 
 ```python
 # Load the numpy files
@@ -104,7 +101,9 @@ dataset = dataset.map(lambda item1, item2: tf.numpy_function(
           num_parallel_calls=tf.data.experimental.AUTOTUNE)
 ```
 
-> <ParallelMapDataset shapes: (<unknown>, <unknown>), types: (tf.float32, tf.int32)>
+```bash
+<ParallelMapDataset shapes: (<unknown>, <unknown>), types: (tf.float32, tf.int32)>
+```
 
 ```pypthon
 # Shuffle and batch
@@ -112,4 +111,6 @@ dataset = dataset.shuffle(BUFFER_SIZE).batch(BATCH_SIZE)
 dataset = dataset.prefetch(buffer_size=tf.data.experimental.AUTOTUNE)
 ```
 
-> <PrefetchDataset shapes: (<unknown>, <unknown>), types: (tf.float32, tf.int32)>
+```bash
+<PrefetchDataset shapes: (<unknown>, <unknown>), types: (tf.float32, tf.int32)>
+```
