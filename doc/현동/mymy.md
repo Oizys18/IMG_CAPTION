@@ -5,6 +5,11 @@ jupyter notebook
 conda activate AI
 ```
 
+https://towardsdatascience.com/practical-coding-in-tensorflow-2-0-fafd2d3863f6
+
+
+
+-  
 -  20200402
 
 https://www.tensorflow.org/tutorials/text/word_embeddings
