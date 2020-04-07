@@ -8,6 +8,7 @@ doc/현동/self_study/checkpoints/
 
 ## Images ##
 datasets/images/
+datasets/features/
 
 
 # Created by https://www.gitignore.io/api/venv,vuejs,django,python,pycharm,jupyternotebooks,visualstudiocode

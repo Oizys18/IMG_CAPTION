@@ -8,9 +8,9 @@ def get_path_caption(caption_file_path):
     return np.loadtxt(caption_file_path, delimiter='|', skiprows=1, dtype=np.str)
 
 
-def dataset_split_save(data, test_size, random_state):
+def dataset_split_save(data, test_size=0.3): # TODO config
     train_dataset, val_dataset = train_test_split(data,
-                                                  test_size=0.3,
+                                                  test_size=test_size,
                                                   shuffle=False)
 
     np.savetxt(
@@ -24,22 +24,25 @@ def dataset_split_save(data, test_size, random_state):
     return './datasets/train_datasets.npy', './datasets/test_datasets.npy'
 
 
-def get_data_file(dataset_path):
+def get_data_file(dir_path, dataset_path):
     data = np.load(dataset_path)
-    img_paths = data[:, :1]
-    captions = data[:, 2:]
-
-    return img_paths, captions
-
-
-def sampling_data(img_paths, captions, do_sampling):
-    print('sampling 데이터를 ' + str(do_sampling) + '개 실행합니다.')
-
-    return img_paths[:do_sampling, :], captions[:do_sampling, :]
+    img_paths = data[:50, :1]
+    captions = data[:50, 2:]
+    train_images = np.squeeze(img_paths, axis=1)
+    train_images = [dir_path + 'images/' + img for img in train_images]
+    train_captions = np.squeeze(captions, axis=1)
+    train_captions = ['<start>' + cap + ' <end>' for cap in train_captions]
+    print()
+    print('전처리 step 1')
+    print('이미지 경로 수정 ex) ', train_images[:1])
+    print('캡션 앞뒤 붙이기 ex) ')
+    print('1: ', train_captions[:1])
+    print('2: ', train_captions[1:2])
+    return train_images, train_captions
 
 
 def save_tokenizer(data_path, caption_num_words=5000):
-    data = np.loadtxt('./datasets/train_datasets.csv', delimiter='|', skiprows=1, dtype=np.str)
+    data = np.load(data_path)
     captions = data[:, 2:]
 
     captions = np.squeeze(captions, axis=1)
@@ -59,14 +62,43 @@ def save_tokenizer(data_path, caption_num_words=5000):
         pickle.dump(tokenizer, f, protocol=pickle.HIGHEST_PROTOCOL)
 
 
-def get_tokenizer():
+def change_text_to_token(train_captions):
     with open('./datasets/tokenizer.pkl', 'rb') as f:
         tokenizer = pickle.load(f)
-    return tokenizer
+    train_seqs = tokenizer.texts_to_sequences(train_captions)
+    cap_vector = tf.keras.preprocessing.sequence.pad_sequences(train_seqs, padding='post')
+    print()
+    print('전처리 step 2')
+    print('캡션 텍스트 토큰화 ex) ')
+    print('1: ', cap_vector[:1])
+    print('2: ', cap_vector[1:2])
+    return cap_vector
 
 
-def get_dataset(image_file_path, caption_file_path):
-    pass
+def load_image(image_path):
+    img = tf.io.read_file(image_path)
+    img = tf.image.decode_jpeg(img, channels=3)
+    img = tf.image.resize(img, (255, 255))
+    # TODO 정규화 함수를 추가해주세요
+    return img, image_path
 
 
+def get_image_datasets(img_name_vector):
+    encode_train = sorted(set(img_name_vector))
+    image_dataset = tf.data.Dataset.from_tensor_slices(encode_train)
+    image_dataset = image_dataset.map(
+        load_image, num_parallel_calls=tf.data.experimental.AUTOTUNE).batch(16)  # TODO batch
+    return image_dataset
 
+
+def map_func(img_name, cap):
+    img_tensor = np.load(img_name.decode('utf-8') + '.npy')
+    return img_tensor, cap
+
+
+def get_tf_dataset(img_name_train, cap_train):
+    dataset = tf.data.Dataset.from_tensor_slices((img_name_train, cap_train))
+    dataset = dataset.map(lambda item1, item2: tf.numpy_function(
+        map_func, [item1, item2], [tf.float32, tf.int32]),
+                          num_parallel_calls=tf.data.experimental.AUTOTUNE)
+    return dataset
