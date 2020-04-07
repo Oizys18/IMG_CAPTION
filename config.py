@@ -1,5 +1,6 @@
 import argparse
 import os
+from pathlib import Path
 # Req. 2-1	Config.py 파일 생성
 parser = argparse.ArgumentParser()
 
@@ -10,7 +11,7 @@ parser.add_argument('--test_size', type=int, default=0.2, help='테스트로 나
 parser.add_argument('--random_state', type=int, default=918273645, help='shuffle 난수')
 parser.add_argument('--do_sampling', type=int, help='샘플링 갯수')
 parser.add_argument('--normalize', action='store_false', help="정규화 여부")
-parser.add_argument('--base_dir', type=str, default=os.path.join(*os.path.dirname(os.path.abspath(__file__)).split(os.path.sep)), help="BASE_DIR")
+parser.add_argument('--base_dir', type=str, default=Path(os.path.dirname(os.path.abspath(__file__))), help="BASE_DIR")
 config = parser.parse_args()
 
 print(config.do_what + '_dataset 을 실행시킵니다.')
