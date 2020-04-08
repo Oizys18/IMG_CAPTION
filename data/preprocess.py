@@ -2,11 +2,14 @@ import numpy as np
 from sklearn.model_selection import train_test_split
 import tensorflow as tf
 import pickle
-from doc.img_augmentation import img_aug
+# from ai_sub2.doc.img_augmentation import img_aug
 import matplotlib.pyplot as plt
 import matplotlib.image as mpimg
 from pathlib import Path
-from config import config
+from ai_sub2.config import config
+import os 
+print(config.do_sampling)
+BASE_DIR = os.path.join(config.base_dir, 'datasets')
 
 def get_path_caption(caption_file_path):
     return np.loadtxt(caption_file_path, delimiter='|', skiprows=1, dtype=np.str)
@@ -28,21 +31,25 @@ def dataset_split_save(data, test_size=0.3): # TODO config
     return './datasets/train_datasets.npy', './datasets/test_datasets.npy'
 
 
-def get_data_file(dir_path, dataset_path):
-    data = np.load(dataset_path)
-    img_paths = data[:50, :1]
-    captions = data[:50, 2:]
+def get_data_file():
+    print(config)
+    train_datasets_path = os.path.join(BASE_DIR, 'train_datasets.npy')
+    test_datasets_path = os.path.join(BASE_DIR, 'test_datasets.npy')
+    dataset_path = train_datasets_path if config.do_what == 'train' else test_datasets_path
+    data = np.load(os.path.join(BASE_DIR, dataset_path))
+    if config.do_sampling:
+        print(f'샘플링 {config.do_sampling}')
+        print(config)
+        total_len = len(data)
+        n_of_sample = int(total_len * config.do_sampling)
+        img_paths = data[:n_of_sample, :1]
+        captions = data[:n_of_sample, 2:]
     train_images = np.squeeze(img_paths, axis=1)
-    train_images = [dir_path + 'images/' + img for img in train_images]
+    train_images = [os.path.join(config.base_dir, 'datasets', 'images', f'{img}') for img in train_images]
     train_captions = np.squeeze(captions, axis=1)
     train_captions = ['<start>' + cap + ' <end>' for cap in train_captions]
-    print()
-    print('전처리 step 1')
-    print('이미지 경로 수정 ex) ', train_images[:1])
-    print('캡션 앞뒤 붙이기 ex) ')
-    print('1: ', train_captions[:1])
-    print('2: ', train_captions[1:2])
     return train_images, train_captions
+   
 
 
 def save_tokenizer(data_path, caption_num_words=5000):
@@ -80,17 +87,11 @@ def change_text_to_token(train_captions):
 
 
 def load_image(image_path):
-    image = mpimg.imread(image_path).astype(np.uint8)
-
-    # TODO 정규화 함수를 추가해주세요
-    image = tf.image.per_image_standardization(image).numpy()
-
-    # 데이터 증강
-    image = img_aug(image,config.img_aug)
-    # plt.imshow(image)
-    # plt.show()
-    
-    return image, image_path
+    img = tf.io.read_file(image_path)
+    img = tf.image.decode_jpeg(img, channels=3)
+    img = tf.image.resize(img, (299, 299))
+    img = tf.keras.applications.inception_v3.preprocess_input(img)
+    return img, image_path
 
 
 def get_image_datasets(img_name_vector):
