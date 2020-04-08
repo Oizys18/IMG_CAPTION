@@ -1,3 +1,8 @@
+# Tokenizer
+
+num_words https://github.com/keras-team/keras/issues/8092
+
+
 
 # Numpy
 
@@ -66,6 +71,40 @@
 
 
 
+```
+# https://towardsdatascience.com/practical-coding-in-tensorflow-2-0-fafd2d3863f6
+# Feel free to change these parameters according to your system's configuration
+BATCH_SIZE = 64
+# 데이터셋을 섞을 버퍼 크기
+# (TF 데이터는 무한한 시퀀스와 함께 작동이 가능하도록 설계되었으며,
+# 따라서 전체 시퀀스를 메모리에 섞지 않습니다. 대신에, 요소를 섞는 버퍼를 유지합니다).
+# https://helloyjam.github.io/tensorflow/buffer-size-in-shuffle/
+# https://stackoverflow.com/questions/46444018/meaning-of-buffer-size-in-dataset-map-dataset-prefetch-and-dataset-shuffle
+BUFFER_SIZE = 1000
+# 임베딩 차원
+# https://subinium.github.io/Keras-6-1/
+embedding_dim = 256
+# RNN 유닛(unit) 개수
+units = 512
+# 문자로 된 어휘 사전의 크기
+# 케라스 토크나이저의 정수 인코딩은 인덱스가 1부터 시작하지만,
+# 케라스 원-핫 인코딩에서 배열의 인덱스가 0부터 시작하기 때문에
+# 배열의 크기를 실제 단어 집합의 크기보다 +1로 생성해야하므로 미리 +1 선언
+# vocab_size = len(tokenizer.word_index) + 1
+vocab_size = len(tokenizer.word_index) + 1
+# Steps Per Epoch
+# https://colab.research.google.com/github/Hvass-Labs/TensorFlow-Tutorials/blob/master/22_Image_Captioning.ipynb#scrollTo=UCqXZSKvJFOv
+num_steps = len(img_name_train) // BATCH_SIZE
+# Shape of the vector extracted from InceptionV3 is (64, 2048)
+# These two variables represent that vector shape
+features_shape = 2048
+attention_features_shape = 64
+```
+
+
+
+
+
 
 
 # RNN 
@@ -87,7 +126,7 @@
   BUFFER_SIZE = 10000
   ```
 
-
+https://towardsdatascience.com/practical-coding-in-tensorflow-2-0-fafd2d3863f6
 
 
 
