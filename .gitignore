@@ -10,7 +10,7 @@ doc/현동/self_study/checkpoints/
 datasets/images/
 datasets/features/*
 datasets/features/**/
-
+datasets/augmented_images/
 
 # Created by https://www.gitignore.io/api/venv,vuejs,django,python,pycharm,jupyternotebooks,visualstudiocode
 # Edit at https://www.gitignore.io/?templates=venv,vuejs,django,python,pycharm,jupyternotebooks,visualstudiocode

@@ -10,12 +10,31 @@ import numpy as np
 import os
 from tqdm import tqdm
 
+# config 경로문제, 최상위 위치에서 실행시키면 사용 가능 
+from doc.img_augmentation import img_aug
+from pathlib import Path
+from PIL import Image
+
 # 텐서 초기화
 tf.autograph.experimental.do_not_convert()
 tf.compat.v1.reset_default_graph()
 # file 불러오기
 img_name_vector, train_captions = preprocess.get_data_file()
+# 데이터 증강
+if config.img_aug != 'original':
+    for img_name in img_name_vector:
+        augmented_img = img_aug(img_name, config.img_aug)
 
+        # numpy로 저장
+        # np.save(Path(config.base_dir,'datasets','augmented_images',f'{img_name}'),augmented_img)
+
+        # jpg로 저장
+        agimage = Image.fromarray(augmented_img)
+        agimage.save(Path(config.base_dir, 'datasets',
+                          'augmented_images', f'aug_{img_name}'))
+
+img_name_vector = [os.path.join(
+    config.base_dir, 'datasets', 'images', f'{img}') for img in img_name_vector]
 
 # Inception V3 모델링
 image_model = tf.keras.applications.InceptionV3(
