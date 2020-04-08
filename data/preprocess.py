@@ -1,5 +1,6 @@
 import numpy as np
 from sklearn.model_selection import train_test_split
+from sklearn.utils import shuffle
 import tensorflow as tf
 import pickle
 # from ai_sub2.doc.img_augmentation import img_aug
@@ -8,7 +9,7 @@ import matplotlib.image as mpimg
 from pathlib import Path
 from ai_sub2.config import config
 import os 
-print(config.do_sampling)
+
 BASE_DIR = os.path.join(config.base_dir, 'datasets')
 
 def get_path_caption(caption_file_path):
@@ -32,14 +33,11 @@ def dataset_split_save(data, test_size=0.3): # TODO config
 
 
 def get_data_file():
-    print(config)
     train_datasets_path = os.path.join(BASE_DIR, 'train_datasets.npy')
     test_datasets_path = os.path.join(BASE_DIR, 'test_datasets.npy')
     dataset_path = train_datasets_path if config.do_what == 'train' else test_datasets_path
     data = np.load(os.path.join(BASE_DIR, dataset_path))
     if config.do_sampling:
-        print(f'샘플링 {config.do_sampling}')
-        print(config)
         total_len = len(data)
         n_of_sample = int(total_len * config.do_sampling)
         img_paths = data[:n_of_sample, :1]
@@ -48,6 +46,7 @@ def get_data_file():
     train_images = [os.path.join(config.base_dir, 'datasets', 'images', f'{img}') for img in train_images]
     train_captions = np.squeeze(captions, axis=1)
     train_captions = ['<start>' + cap + ' <end>' for cap in train_captions]
+    train_images, train_captions = shuffle(train_images, train_captions, random_state=1) 
     return train_images, train_captions
    
 

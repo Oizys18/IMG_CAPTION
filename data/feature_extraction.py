@@ -12,7 +12,7 @@ from tqdm import tqdm
 
 # 텐서 초기화
 tf.autograph.experimental.do_not_convert()
-
+tf.compat.v1.reset_default_graph()
 # file 불러오기
 img_name_vector, train_captions = preprocess.get_data_file()
 

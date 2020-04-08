@@ -17,4 +17,3 @@ config = parser.parse_args()
 
 print(config.do_what + '_dataset 을 실행시킵니다.')
 print("Image augmentation method: "+config.img_aug)
-print(config.do_sampling)

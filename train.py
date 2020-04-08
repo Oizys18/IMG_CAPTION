@@ -4,9 +4,12 @@ from utils import utils
 from sklearn.model_selection import train_test_split
 import tensorflow as tf
 import os
+import numpy as np
+from models.encoder import CNN_Encoder
 
+tf.autograph.experimental.do_not_convert()
+tf.compat.v1.reset_default_graph()
 # config 저장
-print(config.do_sampling)
 utils.save_config()
 BASE_DIR = os.path.join(config.base_dir, 'datasets')
 
@@ -29,58 +32,58 @@ if not os.path.exists(tokenizer_path):
 else:
     print('기존의 Tokenizer 를 사용합니다.')
 
-# 전처리 1 image_path 와 captions 데이터셋 불러오기
-img_name_vector, train_captions = preprocess.get_data_file()
-
-
-'''
-
-# 전처리 2 captions 의 text 를 토큰화
-cap_vector = preprocess.change_text_to_token(train_captions)
-
-
-# 전처리 3 train 과 val 분리
-img_name_train, img_name_val, cap_train, cap_val = train_test_split(img_name_vector,
-                                                                    cap_vector,
-                                                                    test_size=0.2,
-                                                                    random_state=0)  # TODO config
-
 
 # 이미지 특징 벡터 불러오기
 # Load the numpy files
 def map_func(img_name, cap):
-  img_tensor = np.load(img_name.decode('utf-8')+'.npy')
-  return img_tensor, cap
+    feature_name = os.path.basename(img_name).decode('utf-8').replace('jpg', 'npy')
+    img_tensor = np.load((os.path.join(BASE_DIR, 'features', feature_name)))
+    return img_tensor, cap
 
-
-
-# 인코더
-class CNN_Encoder(tf.keras.Model):
-    def __init__(self, embedding_dim):
-        super(CNN_Encoder, self).__init__()
-        # shape after fc == (batch_size, 64, embedding_dim)
-        self.fc = tf.keras.layers.Dense(embedding_dim)
-
-    def call(self, x):
-        x = self.fc(x)
-        x = tf.nn.relu(x)
-        return x
-
-
-# 전처리 6 Req 3-1 이미지 데이터 및 토큰화 된 캡션 쌍 리턴하기 및 Shuffle, batch
-# dataset = preprocess.get_tf_dataset(img_name_train, cap_train)
-# dataset = dataset.shuffle(config.buffer_size).batch(config.batch_size)  # TODO config
-# dataset = dataset.prefetch(buffer_size=tf.data.experimental.AUTOTUNE)
 
 # 전처리 7 Req 3-2
 
 
 # hyperparameter
 embedding_dim = 256
+BUFFER_SIZE = 48
+BATCH_SIZE = 16
 
 
 
-# 실행 여기서 부터
+################################################ 실행 여기서 부터
+# file load 
+img_name_vector, train_captions = preprocess.get_data_file()
+cap_vector = preprocess.change_text_to_token(train_captions)
+img_name_train, img_name_val, cap_train, cap_val = train_test_split(img_name_vector,
+                                                                    cap_vector,
+                                                                    test_size=config.test_size,
+                                                                    random_state=config.random_state)  
+
+# 학습을 위한 데이터셋 설정 (tf.data dataset)
+tf.compat.v1.enable_eager_execution()
+dataset = tf.data.Dataset.from_tensor_slices((img_name_train, cap_train))
+dataset = dataset.map(lambda item1, item2: tf.numpy_function(
+          map_func, [item1, item2], [tf.float32, tf.int32]),
+          num_parallel_calls=tf.data.experimental.AUTOTUNE)
+
+
+
+# Shuffle and batch
+dataset = dataset.shuffle(BUFFER_SIZE).batch(BATCH_SIZE)
+dataset = dataset.prefetch(buffer_size=tf.data.experimental.AUTOTUNE)
+
+# for x, y in dataset:
+#     print(x, y)
+
+
 encoder = CNN_Encoder(embedding_dim)
-features = encoder(img_tensor)
-'''
+
+########### train
+for (batch, (img_tensor, target)) in enumerate(dataset):
+    # print(np.shape(img_tensor)) 
+    # (16, 64, 2048)
+    features = encoder(img_tensor)
+    # print(np.shape(features))
+    # (16, 64, 256)
+
