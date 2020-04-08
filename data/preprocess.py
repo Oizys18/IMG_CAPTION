@@ -2,7 +2,11 @@ import numpy as np
 from sklearn.model_selection import train_test_split
 import tensorflow as tf
 import pickle
-
+from doc.img_augmentation import img_aug
+import matplotlib.pyplot as plt
+import matplotlib.image as mpimg
+from pathlib import Path
+from config import config
 
 def get_path_caption(caption_file_path):
     return np.loadtxt(caption_file_path, delimiter='|', skiprows=1, dtype=np.str)
@@ -76,18 +80,25 @@ def change_text_to_token(train_captions):
 
 
 def load_image(image_path):
-    img = tf.io.read_file(image_path)
-    img = tf.image.decode_jpeg(img, channels=3)
-    img = tf.image.resize(img, (255, 255))
+    image = mpimg.imread(image_path).astype(np.uint8)
+
     # TODO 정규화 함수를 추가해주세요
-    return img, image_path
+    image = tf.image.per_image_standardization(image).numpy()
+
+    # 데이터 증강
+    image = img_aug(image,config.img_aug)
+    # plt.imshow(image)
+    # plt.show()
+    
+    return image, image_path
 
 
 def get_image_datasets(img_name_vector):
     encode_train = sorted(set(img_name_vector))
-    image_dataset = tf.data.Dataset.from_tensor_slices(encode_train)
-    image_dataset = image_dataset.map(
-        load_image, num_parallel_calls=tf.data.experimental.AUTOTUNE).batch(16)  # TODO batch
+    image_dataset = list(map(load_image,encode_train))
+    # image_dataset = tf.data.Dataset.from_tensor_slices(encode_train)
+    # image_dataset = image_dataset.map(
+    #     load_image, num_parallel_calls=tf.data.experimental.AUTOTUNE).batch(16)  # TODO batch
     return image_dataset
 
 
