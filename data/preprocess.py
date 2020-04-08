@@ -8,15 +8,16 @@ import matplotlib.pyplot as plt
 import matplotlib.image as mpimg
 from pathlib import Path
 from config import config
-import os 
+import os
 
 BASE_DIR = os.path.join(config.base_dir, 'datasets')
+
 
 def get_path_caption(caption_file_path):
     return np.loadtxt(caption_file_path, delimiter='|', skiprows=1, dtype=np.str)
 
 
-def dataset_split_save(data, test_size=0.3): # TODO config
+def dataset_split_save(data, test_size=0.3):  # TODO config
     train_dataset, val_dataset = train_test_split(data,
                                                   test_size=test_size,
                                                   shuffle=False)
@@ -43,12 +44,11 @@ def get_data_file():
         img_paths = data[:n_of_sample, :1]
         captions = data[:n_of_sample, 2:]
     train_images = np.squeeze(img_paths, axis=1)
-    train_images = [os.path.join(config.base_dir, 'datasets', 'images', f'{img}') for img in train_images]
     train_captions = np.squeeze(captions, axis=1)
     train_captions = ['<start>' + cap + ' <end>' for cap in train_captions]
-    train_images, train_captions = shuffle(train_images, train_captions, random_state=1) 
+    train_images, train_captions = shuffle(
+        train_images, train_captions, random_state=1)
     return train_images, train_captions
-   
 
 
 def save_tokenizer(data_path, caption_num_words=5000):
@@ -76,7 +76,8 @@ def change_text_to_token(train_captions):
     with open('./datasets/tokenizer.pkl', 'rb') as f:
         tokenizer = pickle.load(f)
     train_seqs = tokenizer.texts_to_sequences(train_captions)
-    cap_vector = tf.keras.preprocessing.sequence.pad_sequences(train_seqs, padding='post')
+    cap_vector = tf.keras.preprocessing.sequence.pad_sequences(
+        train_seqs, padding='post')
     print()
     print('전처리 step 2')
     print('캡션 텍스트 토큰화 ex) ')
@@ -95,7 +96,7 @@ def load_image(image_path):
 
 def get_image_datasets(img_name_vector):
     encode_train = sorted(set(img_name_vector))
-    image_dataset = list(map(load_image,encode_train))
+    image_dataset = list(map(load_image, encode_train))
     # image_dataset = tf.data.Dataset.from_tensor_slices(encode_train)
     # image_dataset = image_dataset.map(
     #     load_image, num_parallel_calls=tf.data.experimental.AUTOTUNE).batch(16)  # TODO batch
@@ -111,5 +112,5 @@ def get_tf_dataset(img_name_train, cap_train):
     dataset = tf.data.Dataset.from_tensor_slices((img_name_train, cap_train))
     dataset = dataset.map(lambda item1, item2: tf.numpy_function(
         map_func, [item1, item2], [tf.float32, tf.int32]),
-                          num_parallel_calls=tf.data.experimental.AUTOTUNE)
+        num_parallel_calls=tf.data.experimental.AUTOTUNE)
     return dataset
