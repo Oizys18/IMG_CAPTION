@@ -7,7 +7,7 @@ import pickle
 import matplotlib.pyplot as plt
 import matplotlib.image as mpimg
 from pathlib import Path
-from ai_sub2.config import config
+from config import config
 import os 
 
 BASE_DIR = os.path.join(config.base_dir, 'datasets')
