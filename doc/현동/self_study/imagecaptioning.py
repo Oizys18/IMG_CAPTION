@@ -63,6 +63,10 @@ def load_image(image_path):
 
 img_name_vector, train_captions = get_data_file()
 
+img_name_vector, train_captions = shuffle(img_name_vector,
+                                          train_captions,
+                                          random_state=1)
+
 image_model = tf.keras.applications.InceptionV3(include_top=False,
                                                 weights='imagenet')
 new_input = image_model.input
@@ -144,10 +148,10 @@ print(bf.numpy())
 
 
 # Find the maximum length of any caption in our dataset
-# def calc_max_length(tensor):
-#     return max(len(t) for t in tensor)
+def calc_max_length(tensor):
+    return max(len(t) for t in tensor)
 
-# top_k = 5000
+top_k = 5000
 # tokenizer = tf.keras.preprocessing.text.Tokenizer(num_words=top_k,
 #                                                   oov_token="<unk>",
 #                                                   filters='!"#$%&()*+.,-/:;=?@[\]^_`{|}~ ')
@@ -164,7 +168,8 @@ def get_tokenizer():
 tokenizer = get_tokenizer()
 train_seqs = tokenizer.texts_to_sequences(train_captions)
 cap_vector = tf.keras.preprocessing.sequence.pad_sequences(train_seqs, padding='post')
-# max_length = calc_max_length(train_seqs)
+max_length = calc_max_length(train_seqs)
+print(max_length)
 
 
 # Create training and validation sets using an 80-20 split
@@ -180,17 +185,27 @@ print()
 
 
 # Feel free to change these parameters according to your system's configuration
+# https://towardsdatascience.com/practical-coding-in-tensorflow-2-0-fafd2d3863f6
 BATCH_SIZE = 64
 # 데이터셋을 섞을 버퍼 크기
 # (TF 데이터는 무한한 시퀀스와 함께 작동이 가능하도록 설계되었으며,
 # 따라서 전체 시퀀스를 메모리에 섞지 않습니다. 대신에, 요소를 섞는 버퍼를 유지합니다).
+# https://helloyjam.github.io/tensorflow/buffer-size-in-shuffle/
+# https://stackoverflow.com/questions/46444018/meaning-of-buffer-size-in-dataset-map-dataset-prefetch-and-dataset-shuffle
 BUFFER_SIZE = 1000
 # 임베딩 차원
+# https://subinium.github.io/Keras-6-1/
 embedding_dim = 256
 # RNN 유닛(unit) 개수
 units = 512
 # 문자로 된 어휘 사전의 크기
+# 케라스 토크나이저의 정수 인코딩은 인덱스가 1부터 시작하지만,
+# 케라스 원-핫 인코딩에서 배열의 인덱스가 0부터 시작하기 때문에
+# 배열의 크기를 실제 단어 집합의 크기보다 +1로 생성해야하므로 미리 +1 선언
+# vocab_size = len(tokenizer.word_index) + 1
 vocab_size = top_k + 1
+# Steps Per Epoch
+# https://colab.research.google.com/github/Hvass-Labs/TensorFlow-Tutorials/blob/master/22_Image_Captioning.ipynb#scrollTo=UCqXZSKvJFOv
 num_steps = len(img_name_train) // BATCH_SIZE
 # Shape of the vector extracted from InceptionV3 is (64, 2048)
 # These two variables represent that vector shape
