@@ -6,6 +6,7 @@ import tensorflow as tf
 import os
 import numpy as np
 from models.encoder import CNN_Encoder
+from models.decoder import RNN_Decoder
 
 tf.autograph.experimental.do_not_convert()
 tf.compat.v1.reset_default_graph()
@@ -48,7 +49,8 @@ def map_func(img_name, cap):
 embedding_dim = 256
 BUFFER_SIZE = 48
 BATCH_SIZE = 16
-
+units = 512
+vocab_size = 5000
 
 
 ################################################ 실행 여기서 부터
@@ -78,6 +80,7 @@ dataset = dataset.prefetch(buffer_size=tf.data.experimental.AUTOTUNE)
 
 
 encoder = CNN_Encoder(embedding_dim)
+decoder = RNN_Decoder(embedding_dim, units, vocab_size)
 
 ########### train
 for (batch, (img_tensor, target)) in enumerate(dataset):
