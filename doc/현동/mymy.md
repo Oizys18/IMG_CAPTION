@@ -25,7 +25,7 @@ https://www.tensorflow.org/tutorials/text/image_captioning
 
 
 - Allocator (GPU_0_bfc) ran out of memory trying to allocate  https://eehoeskrap.tistory.com/360 
-
+- https://datamasters.co.kr/33?category=783262
 - Tennsorflow v2 Limit GPU Memory usage https://github.com/tensorflow/tensorflow/issues/25138
 
 
@@ -100,8 +100,5 @@ https://www.tensorflow.org/tutorials/text/image_captioning
 
 - 팀장 주도하에 줌을 통해 회의를 개설하여 각자 이번 프로젝트시 1.잘하거나 좋았던 점, 2. 힘들었거나 아쉬웠던 점, 3. 개선할 점 말하고 메러모스트 팀방에 남기기
 - 서기1명이 Gitlab 프로젝트에 해당 내용들 취합해서 Gitlab > Wiki 에 마크다운으로 위 3가지 항목으로 남기기
-
-
-
 
 
