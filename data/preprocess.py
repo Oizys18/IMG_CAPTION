@@ -83,7 +83,7 @@ def save_tokenizer(data_path, caption_num_words=5000):
 def calc_max_length(tensor):
     return max(len(t) for t in tensor)
 
-def change_text_to_token(train_captions):
+def change_text_to_token(train_captions, tokenizer_path):
     with open('./datasets/tokenizer.pkl', 'rb') as f:
         tokenizer = pickle.load(f)
     train_seqs = tokenizer.texts_to_sequences(train_captions)
