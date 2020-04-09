@@ -47,25 +47,32 @@ def get_data_file():
     return train_images, train_captions
 
 
-def save_tokenizer(data_path, tokenizer_path, caption_num_words=5000):
-    data = np.load(data_path)
-    captions = data[:, 2:]
-
-    captions = np.squeeze(captions, axis=1)
-    captions = ['<start>' + cap + ' <end>' for cap in captions]
-
-    tokenizer = tf.keras.preprocessing.text.Tokenizer(num_words=caption_num_words + 1,
-                                                      oov_token='<unk>',
-                                                      lower=True,
-                                                      split=' ',
-                                                      filters='!"#$%&()*+.,-/:;=?@[\]^_`{|}~ ')
-
-    tokenizer.fit_on_texts(captions)
-    tokenizer.word_index['<pad>'] = 0
-    tokenizer.index_word[0] = '<pad>'
-
-    with open(tokenizer_path, 'wb') as f:
-        pickle.dump(tokenizer, f, protocol=pickle.HIGHEST_PROTOCOL)
+def save_tokenizer(caption_num_words=5000):
+    tokenizer_path = os.path.join(BASE_DIR,'tokenizer.pkl')
+    if not os.path.exists(tokenizer_path):     
+        data = np.load(data_path)
+        captions = data[:, 2:]
+    
+        captions = np.squeeze(captions, axis=1)
+        captions = ['<start>' + cap + ' <end>' for cap in captions]
+    
+        tokenizer = tf.keras.preprocessing.text.Tokenizer(num_words=caption_num_words + 1,
+                                                          oov_token='<unk>',
+                                                          lower=True,
+                                                          split=' ',
+                                                          filters='!"#$%&()*+.,-/:;=?@[\]^_`{|}~ ')
+    
+        tokenizer.fit_on_texts(captions)
+        tokenizer.word_index['<pad>'] = 0
+        tokenizer.index_word[0] = '<pad>'
+        
+        with open('./datasets/tokenizer.pkl', 'wb') as f:
+            pickle.dump(tokenizer, f, protocol=pickle.HIGHEST_PROTOCOL)
+    else:
+        with open(tokenizer_path, 'rb') as f:
+            tokenizer = pickle.load(f)
+        
+    return tokenizer
 
 
 def change_text_to_token(train_captions, tokenizer_path):
