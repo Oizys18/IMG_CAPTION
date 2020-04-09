@@ -10,57 +10,56 @@ from pathlib import Path
 from config import config
 import os
 
-BASE_DIR = os.path.join(config.base_dir, 'datasets')
-
 
 def get_path_caption(caption_file_path):
     return np.loadtxt(caption_file_path, delimiter='|', skiprows=1, dtype=np.str)
 
 
-def dataset_split_save(data, test_size=0.3):  # TODO config
-    train_dataset, val_dataset = train_test_split(data,
-                                                  test_size=test_size,
-                                                  shuffle=False)
+def dataset_split_save(base_dir, test_size):
+    train_datasets_path = os.path.join(base_dir, 'train_datasets.npy')
+    test_datasets_path = os.path.join(base_dir, 'test_datasets.npy')
+    if not os.path.exists(train_datasets_path):
+        dataset = get_path_caption(config.caption_file_path)
+        train_dataset, val_dataset = train_test_split(dataset,
+                                                      test_size=test_size,
+                                                      shuffle=False)
+        np.save(train_datasets_path, train_dataset)
+        np.save(test_datasets_path, val_dataset)
+        print('dataset 을 train_datasets 과 test_datasets 으로 나눕니다.')
+    else:
+        print('저장 된 train_datasets 과 test_datasets 을 사용합니다.')
 
-    np.savetxt(
-        './datasets/train_datasets.csv', train_dataset, fmt='%s', delimiter='|'
-    )
-    np.save('./datasets/train_datasets.npy', train_dataset)
-    np.savetxt(
-        './datasets/test_datasets.csv', val_dataset, fmt='%s', delimiter='|'
-    )
-    np.save('./datasets/test_datasets.npy', val_dataset)
-    return './datasets/train_datasets.npy', './datasets/test_datasets.npy'
 
-
-def get_data_file():
-    train_datasets_path = os.path.join(BASE_DIR, 'train_datasets.npy')
-    test_datasets_path = os.path.join(BASE_DIR, 'test_datasets.npy')
+def get_data_file(base_dir):
+    train_datasets_path = os.path.join(base_dir, 'train_datasets.npy')
+    test_datasets_path = os.path.join(base_dir, 'test_datasets.npy')
     dataset_path = train_datasets_path if config.do_what == 'train' else test_datasets_path
-    data = np.load(os.path.join(BASE_DIR, dataset_path))
+    data = np.load(os.path.join(base_dir, dataset_path))
     if config.do_sampling:
         total_len = len(data)
         n_of_sample = int(total_len * config.do_sampling)
         img_paths = data[:n_of_sample, :1]
         captions = data[:n_of_sample, 2:]
+    else:
+        img_paths = data[:, :1]
+        captions = data[:, 2:]
     train_images = np.squeeze(img_paths, axis=1)
     train_captions = np.squeeze(captions, axis=1)
     train_captions = ['<start>' + cap + ' <end>' for cap in train_captions]
-    train_images, train_captions = shuffle(
-        train_images, train_captions, random_state=1)
+    train_images, train_captions = shuffle(train_images, train_captions, random_state=1)
     return train_images, train_captions
 
 
-def save_tokenizer(data_path, caption_num_words=5000):
-    tokenizer_path = os.path.join(BASE_DIR, 'tokenizer.pkl')
+def get_tokenizer(base_dir, num_words):
+    tokenizer_path = os.path.join(base_dir, 'tokenizer.pkl')
     if not os.path.exists(tokenizer_path):
-        data = np.load(data_path)
-        captions = data[:, 2:]
+        dataset = get_path_caption(config.caption_file_path)
+        captions = dataset[:, 2:]
 
         captions = np.squeeze(captions, axis=1)
         captions = ['<start>' + cap + ' <end>' for cap in captions]
 
-        tokenizer = tf.keras.preprocessing.text.Tokenizer(num_words=caption_num_words + 1,
+        tokenizer = tf.keras.preprocessing.text.Tokenizer(num_words=num_words + 1,
                                                           oov_token='<unk>',
                                                           lower=True,
                                                           split=' ',
@@ -70,7 +69,7 @@ def save_tokenizer(data_path, caption_num_words=5000):
         tokenizer.word_index['<pad>'] = 0
         tokenizer.index_word[0] = '<pad>'
 
-        with open('./datasets/tokenizer.pkl', 'wb') as f:
+        with open(tokenizer_path, 'wb') as f:
             pickle.dump(tokenizer, f, protocol=pickle.HIGHEST_PROTOCOL)
     else:
         with open(tokenizer_path, 'rb') as f:
@@ -83,7 +82,7 @@ def save_tokenizer(data_path, caption_num_words=5000):
 def calc_max_length(tensor):
     return max(len(t) for t in tensor)
 
-def change_text_to_token(train_captions, tokenizer_path):
+def change_text_to_token(base_dir, train_captions):
     with open('./datasets/tokenizer.pkl', 'rb') as f:
         tokenizer = pickle.load(f)
     train_seqs = tokenizer.texts_to_sequences(train_captions)

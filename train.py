@@ -5,36 +5,22 @@ from data.feature_extraction import feature_extraction
 from sklearn.model_selection import train_test_split
 import tensorflow as tf
 import os
-import numpy as np
 from models.encoder import CNN_Encoder
 from models.decoder import RNN_Decoder
 import time
-import matplotlib.pyplot as plt
 
 tf.autograph.experimental.do_not_convert()
 tf.compat.v1.reset_default_graph()
-# tf.autograph.set_verbosity(3, True)
-# config 저장
+
 utils.save_config()
+
 BASE_DIR = os.path.join(config.base_dir, 'datasets')
 
-# 전체 데이터셋을 분리해 저장하기
-train_datasets_path = os.path.join(BASE_DIR, 'train_datasets.npy')
-test_datasets_path = os.path.join(BASE_DIR, 'test_datasets.npy')
-if not os.path.exists(train_datasets_path):
-    # 이미지 경로 및 캡션 불러오기
-    dataset = preprocess.get_path_caption(config.caption_file_path)
-    preprocess.dataset_split_save(dataset, BASE_DIR, config.test_size)
-    print('dataset 을 train_datasets 과 test_datasets 으로 나눕니다.')
-else:
-    print('저장 된 train_datasets 과 test_datasets 을 사용합니다.')
+preprocess.dataset_split_save(BASE_DIR, config.test_size)
 
-# tokenizer 불러오기
-tokenizer = preprocess.save_tokenizer(train_datasets_path)
-tokenizer_path = os.path.join(BASE_DIR, 'tokenizer.pkl')
+tokenizer = preprocess.get_tokenizer(BASE_DIR, config.num_words)
 
-# feature 생성
-feature_extraction()
+feature_extraction(BASE_DIR)
 
 def loss_function(real, pred):
   mask = tf.math.logical_not(tf.math.equal(real, 0))
@@ -88,8 +74,8 @@ def train_step(img_tensor, target):
 
 ################################################ 실행 여기서 부터
 # file load 
-img_name_vector, train_captions = preprocess.get_data_file()
-cap_vector,max_length = preprocess.change_text_to_token(train_captions, tokenizer_path)
+img_name_vector, train_captions = preprocess.get_data_file(BASE_DIR)
+cap_vector,max_length = preprocess.change_text_to_token(BASE_DIR, train_captions)
 img_name_train, img_name_val, cap_train, cap_val = train_test_split(img_name_vector,
                                                                     cap_vector,
                                                                     test_size=config.test_size,
@@ -101,7 +87,7 @@ BUFFER_SIZE = 48
 BATCH_SIZE = 16
 units = 512
 vocab_size = 5000
-EPOCHS = 6
+EPOCHS = 2
 num_steps = len(img_name_train)
 
 
