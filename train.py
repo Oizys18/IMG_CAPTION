@@ -26,13 +26,26 @@ if not os.path.exists(train_datasets_path):
 else:
     print('저장 된 train_datasets 과 test_datasets 을 사용합니다.')
 
-# tokenizer 만들기
-tokenizer_path = os.path.join(BASE_DIR,'tokenizer.pkl')
-if not os.path.exists(tokenizer_path):
-    preprocess.save_tokenizer(train_datasets_path)
-    print('새로운 Tokenizer 를 저장합니다.')
-else:
-    print('기존의 Tokenizer 를 사용합니다.')
+# tokenizer 불러오기
+tokenizer = preprocess.save_tokenizer(train_datasets_path)
+tokenizer_path = os.path.join(BASE_DIR, 'tokenizer.pkl')
+
+# feature 생성
+feature_extraction()
+
+def loss_function(real, pred):
+  mask = tf.math.logical_not(tf.math.equal(real, 0))
+  loss_ = loss_object(real, pred)
+
+  mask = tf.cast(mask, dtype=loss_.dtype)
+  loss_ *= mask
+
+  return tf.reduce_mean(loss_)
+
+
+@tf.function
+def train_step(img_tensor, target):
+  loss = 0
 
 
 
@@ -64,7 +77,7 @@ vocab_size = 5000
 ################################################ 실행 여기서 부터
 # file load 
 img_name_vector, train_captions = preprocess.get_data_file()
-cap_vector,max_length = preprocess.change_text_to_token(train_captions)
+cap_vector,max_length = preprocess.change_text_to_token(train_captions, tokenizer_path)
 img_name_train, img_name_val, cap_train, cap_val = train_test_split(img_name_vector,
                                                                     cap_vector,
                                                                     test_size=config.test_size,
