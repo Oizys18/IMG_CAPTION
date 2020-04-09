@@ -9,6 +9,7 @@ import numpy as np
 from models.encoder import CNN_Encoder
 from models.decoder import RNN_Decoder
 import time
+import matplotlib.pyplot as plt
 
 tf.autograph.experimental.do_not_convert()
 tf.compat.v1.reset_default_graph()
@@ -30,7 +31,7 @@ else:
 
 # tokenizer 불러오기
 tokenizer = preprocess.save_tokenizer(train_datasets_path)
-
+tokenizer_path = os.path.join(BASE_DIR, 'tokenizer.pkl')
 
 
 def loss_function(real, pred):
@@ -98,7 +99,7 @@ BUFFER_SIZE = 48
 BATCH_SIZE = 16
 units = 512
 vocab_size = 5000
-EPOCHS = 2
+EPOCHS = 6
 num_steps = len(img_name_train)
 
 
@@ -128,11 +129,23 @@ optimizer = tf.keras.optimizers.Adam()
 loss_object = tf.keras.losses.SparseCategoricalCrossentropy(
     from_logits=True, reduction='none')
 
+############# 체크포인트 매니저 생성
+checkpoint_path = os.path.join(config.base_dir, 'checkpoints')
+ckpt = tf.train.Checkpoint(encoder=encoder,
+                           decoder=decoder,
+                           optimizer = optimizer)
+ckpt_manager = tf.train.CheckpointManager(ckpt, checkpoint_path, max_to_keep=3)
 
 
 ########### train
+start_epoch = 0
+if ckpt_manager.latest_checkpoint:
+  start_epoch = int(ckpt_manager.latest_checkpoint.split('-')[-1])
+  print("마지막으로 저장된 epoch {} 부터 시작합니다.".format(start_epoch + 1))
+  ckpt.restore(ckpt_manager.latest_checkpoint)
+
 loss_plot = []
-for epoch in range(EPOCHS):
+for epoch in range(start_epoch, EPOCHS):
     start = time.time()
     total_loss = 0
 
@@ -146,13 +159,12 @@ for epoch in range(EPOCHS):
     # storing the epoch end loss value to plot later
     loss_plot.append(total_loss / num_steps)
 
-    # checkpoint 
-    '''
+    # checkpoint
     if epoch % 5 == 0:
-      ckpt_manager.save()
-     '''
+        ckpt_manager.save()
+        ckpt_path = ckpt_manager.save()
+        print('Epoch {} 저장 : {}'.format(epoch+1, ckpt_path))
+
     print ('Epoch {} Loss {:.6f}'.format(epoch + 1,
                                          total_loss/num_steps))
     print ('Time taken for 1 epoch {} sec\n'.format(time.time() - start))
-
-
