@@ -89,7 +89,7 @@ def train_step(img_tensor, target):
 ################################################ 실행 여기서 부터
 # file load 
 img_name_vector, train_captions = preprocess.get_data_file()
-cap_vector = preprocess.change_text_to_token(train_captions, tokenizer_path)
+cap_vector,max_length = preprocess.change_text_to_token(train_captions, tokenizer_path)
 img_name_train, img_name_val, cap_train, cap_val = train_test_split(img_name_vector,
                                                                     cap_vector,
                                                                     test_size=config.test_size,
