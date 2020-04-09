@@ -1,13 +1,13 @@
-from PIL import Image
+import os
 import csv
 from config import config
 from datetime import datetime
-import matplotlib.pyplot as plt
+import numpy as np
 
 
-# Req. 2-2	세팅 값 저장
-def save_config():
-	with open('./datasets/config.csv', 'a', newline='') as f:
+def save_config(base_dir): # TODO
+	config_path = os.path.join(base_dir, 'config.csv')
+	with open(config_path, 'a', newline='') as f:
 		w = csv.writer(f, delimiter='|', quotechar='"', quoting=csv.QUOTE_MINIMAL)
 
 		date = datetime.now()
@@ -21,26 +21,7 @@ def save_config():
 		w.writerow([date, caption_file_path, test_size, random_state, do_what, do_sampling, sampling_size])
 
 
-# Req. 4-1	이미지와 캡션 시각화
-def visualize_img_caption(img_paths, caption):
-
-	# 샘플링 아닌 경우 테스트용 임시 코드
-	if not config.do_sampling:
-		img_paths = img_paths[:4]
-		caption = caption[:4]
-
-	if img_paths.size % 2:
-		subplot_size = img_paths.size // 2 + 1
-	else:
-		subplot_size = img_paths.size // 2
-
-	for i in range(img_paths.size):
-		plt.rc('font', size=6)
-		plt.subplot(subplot_size, 2, i + 1)
-		plt.xticks([])
-		plt.yticks([])
-		plt.grid(False)
-		img = Image.open(config.image_file_path + img_paths[i, 0])
-		plt.xlabel(caption[i, 0])
-		plt.imshow(img)
-	plt.show()
+def map_func(img_name, cap):
+	feature_name = os.path.basename(img_name).decode('utf-8').replace('jpg', 'npy')
+	img_tensor = np.load((os.path.join(config.base_dir, 'datasets', 'features', feature_name)))
+	return img_tensor, cap
