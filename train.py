@@ -1,6 +1,7 @@
 from config import config
 from data import preprocess
 from utils import utils
+from data.feature_extraction import feature_extraction
 from sklearn.model_selection import train_test_split
 import tensorflow as tf
 import os
@@ -34,12 +35,19 @@ else:
     print('기존의 Tokenizer 를 사용합니다.')
 
 
+
+# feature extraction 이미지 특징 생성하기
+feature_extraction()
+
+
 # 이미지 특징 벡터 불러오기
 # Load the numpy files
 def map_func(img_name, cap):
     feature_name = os.path.basename(img_name).decode('utf-8').replace('jpg', 'npy')
     img_tensor = np.load((os.path.join(BASE_DIR, 'features', feature_name)))
     return img_tensor, cap
+
+
 
 
 # 전처리 7 Req 3-2
