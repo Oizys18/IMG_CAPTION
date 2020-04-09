@@ -41,6 +41,7 @@ def img_normalization_2(img):
     mean, var = tf.nn.moments(img, axes=[0, 1, 2])
     nn_moments_image = (img - mean) / var**0.5
     image_standardization_image = tf.image.per_image_standardization(img)
+    print(img)
     return [nn_moments_image, image_standardization_image]
 
 
