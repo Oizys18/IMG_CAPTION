@@ -1,25 +1,32 @@
 name: AI
 channels:
+  - conda-forge
   - defaults
 dependencies:
   - _tflow_select=2.1.0=gpu
   - absl-py=0.9.0=py37_0
   - asn1crypto=1.3.0=py37_0
   - astor=0.8.0=py37_0
+  - autopep8=1.4.4=py_0
   - blas=1.0=mkl
   - blinker=1.4=py37_0
-  - ca-certificates=2020.1.1=0
+  - ca-certificates=2020.4.5.1=hecc5488_0
   - cachetools=3.1.1=py_0
-  - certifi=2019.11.28=py37_1
+  - certifi=2020.4.5.1=py37hc8dfbb8_0
   - cffi=1.14.0=py37h7a1dbc1_0
   - chardet=3.0.4=py37_1003
   - click=7.1.1=py_0
+  - cloudpickle=1.3.0=py_0
   - cryptography=2.8=py37h7a1dbc1_0
   - cudatoolkit=10.0.130=0
   - cudnn=7.6.5=cuda10.0_0
   - cycler=0.10.0=py37_0
+  - cytoolz=0.10.1=py37hfa6e2cd_0
+  - dask-core=2.14.0=py_0
+  - decorator=4.4.2=py_0
   - freetype=2.9.1=ha9979f8_1
   - gast=0.2.2=py37_0
+  - geos=3.8.1=he025d50_0
   - git=2.23.0=h6bb4b03_0
   - google-auth=1.11.2=py_0
   - google-auth-oauthlib=0.4.1=py_2
@@ -28,16 +35,27 @@ dependencies:
   - h5py=2.10.0=py37h5e291fa_0
   - hdf5=1.10.4=h7ebc959_0
   - icc_rt=2019.0.0=h0cc432a_1
-  - icu=58.2=ha66f8fd_1
+  - icu=64.2=he025d50_1
   - idna=2.9=py_1
+  - imageio=2.8.0=py_0
+  - imgaug=0.4.0=py_1
   - intel-openmp=2020.0=166
   - joblib=0.14.1=py_0
-  - jpeg=9b=hb83a4c4_2
+  - jpeg=9c=hfa6e2cd_1001
   - keras-applications=1.0.8=py_0
   - keras-preprocessing=1.1.0=py_1
   - kiwisolver=1.1.0=py37ha925a31_0
+  - libblas=3.8.0=15_mkl
+  - libcblas=3.8.0=15_mkl
+  - libclang=9.0.1=default_hf44288c_0
+  - liblapack=3.8.0=15_mkl
+  - liblapacke=3.8.0=15_mkl
+  - libopencv=4.2.0=py37_3
   - libpng=1.6.37=h2a8f88b_0
   - libprotobuf=3.11.4=h7bd577a_0
+  - libtiff=4.1.0=h885aae3_6
+  - libwebp=1.0.2=hfa6e2cd_5
+  - lz4-c=1.8.3=he025d50_1001
   - markdown=3.1.1=py37_0
   - matplotlib=3.1.3=py37_0
   - matplotlib-base=3.1.3=py37h64f37c6_0
@@ -45,31 +63,40 @@ dependencies:
   - mkl-service=2.3.0=py37hb782905_0
   - mkl_fft=1.0.15=py37h14836fe_0
   - mkl_random=1.1.0=py37h675688f_0
+  - networkx=2.4=py_1
   - numpy=1.18.1=py37h93ca92e_0
   - numpy-base=1.18.1=py37hc3f5095_1
   - oauthlib=3.1.0=py_0
-  - openssl=1.1.1f=he774522_0
+  - olefile=0.46=py_0
+  - opencv=4.2.0=py37_3
+  - openssl=1.1.1f=hfa6e2cd_0
   - opt_einsum=3.1.0=py_0
   - pip=20.0.2=py37_1
   - protobuf=3.11.4=py37h33f27b4_0
+  - py-opencv=4.2.0=py37h43977f1_3
   - pyasn1=0.4.8=py_0
   - pyasn1-modules=0.2.7=py_0
+  - pycodestyle=2.5.0=py37_0
   - pycparser=2.20=py_0
   - pyjwt=1.7.1=py37_0
   - pyopenssl=19.1.0=py37_0
   - pyparsing=2.4.6=py_0
-  - pyqt=5.9.2=py37h6538335_2
+  - pyqt=5.12.3=py37h6538335_1
   - pyreadline=2.1=py37_1
   - pysocks=1.7.1=py37_0
   - python=3.7.7=h60c2a47_0_cpython
   - python-dateutil=2.8.1=py_0
-  - qt=5.9.7=vc14h73c81de_0
+  - python_abi=3.7=1_cp37m
+  - pywavelets=1.1.1=py37hc8d92b1_0
+  - qt=5.12.5=h7ef1ec2_0
   - requests=2.23.0=py37_0
   - requests-oauthlib=1.3.0=py_0
   - rsa=4.0=py_0
+  - scikit-image=0.16.2=py37he350917_0
   - scikit-learn=0.22.1=py37h6288b17_0
   - scipy=1.4.1=py37h9439919_0
   - setuptools=46.1.3=py37_0
+  - shapely=1.7.0=py37he1cf020_3
   - sip=4.19.8=py37h6538335_0
   - six=1.14.0=py37_0
   - sqlite=3.31.1=he774522_0
@@ -79,6 +106,8 @@ dependencies:
   - tensorflow-estimator=2.0.0=pyh2649769_0
   - tensorflow-gpu=2.0.0=h0d30ee6_0
   - termcolor=1.1.0=py37_1
+  - tk=8.6.10=hfa6e2cd_0
+  - toolz=0.10.0=py_0
   - tornado=6.0.4=py37he774522_1
   - tqdm=4.44.1=py_0
   - urllib3=1.25.8=py37_0
@@ -89,11 +118,15 @@ dependencies:
   - win_inet_pton=1.1.0=py37_0
   - wincertstore=0.2=py37_0
   - wrapt=1.12.1=py37he774522_1
+  - xz=5.2.4=h2fa13f4_1002
   - zlib=1.2.11=h62dcd97_3
+  - zstd=1.4.4=hd8a0e53_2
   - pip:
     - keras==2.3.1
     - pandas==1.0.3
     - pillow==7.0.0
+    - pyqt5-sip==4.19.18
+    - pyqtwebengine==5.12.1
     - pytz==2019.3
     - pyyaml==5.3.1
 prefix: C:\ProgramData\Anaconda3\envs\AI
