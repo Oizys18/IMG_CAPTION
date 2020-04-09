@@ -17,20 +17,13 @@ def get_path_caption(caption_file_path):
     return np.loadtxt(caption_file_path, delimiter='|', skiprows=1, dtype=np.str)
 
 
-def dataset_split_save(data, test_size=0.3):  # TODO config
+def dataset_split_save(data, BASE_DIR, test_size=0.3):  # TODO config
     train_dataset, val_dataset = train_test_split(data,
                                                   test_size=test_size,
                                                   shuffle=False)
 
-    np.savetxt(
-        './datasets/train_datasets.csv', train_dataset, fmt='%s', delimiter='|'
-    )
-    np.save('./datasets/train_datasets.npy', train_dataset)
-    np.savetxt(
-        './datasets/test_datasets.csv', val_dataset, fmt='%s', delimiter='|'
-    )
-    np.save('./datasets/test_datasets.npy', val_dataset)
-    return './datasets/train_datasets.npy', './datasets/test_datasets.npy'
+    np.save(os.path.join(BASE_DIR, 'train_datasets.npy'), train_dataset)
+    np.save(os.path.join(BASE_DIR, 'test_datasets.npy'), val_dataset)
 
 
 def get_data_file():

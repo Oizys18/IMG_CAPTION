@@ -20,7 +20,7 @@ test_datasets_path = os.path.join(BASE_DIR, 'test_datasets.npy')
 if not os.path.exists(train_datasets_path):
     # 이미지 경로 및 캡션 불러오기
     dataset = preprocess.get_path_caption(config.caption_file_path)
-    preprocess.dataset_split_save(dataset, config.test_size)
+    preprocess.dataset_split_save(dataset, BASE_DIR, config.test_size)
     print('dataset 을 train_datasets 과 test_datasets 으로 나눕니다.')
 else:
     print('저장 된 train_datasets 과 test_datasets 을 사용합니다.')
