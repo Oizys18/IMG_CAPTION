@@ -30,14 +30,14 @@ def dataset_split_save(base_dir, test_size):
         print('저장 된 train_datasets 과 test_datasets 을 사용합니다.')
 
 
-def get_data_file(base_dir):
+def get_data_file(base_dir, do_what, do_sampling):
     train_datasets_path = os.path.join(base_dir, 'train_datasets.npy')
     test_datasets_path = os.path.join(base_dir, 'test_datasets.npy')
-    dataset_path = train_datasets_path if config.do_what == 'train' else test_datasets_path
+    dataset_path = train_datasets_path if do_what == 'train' else test_datasets_path
     data = np.load(os.path.join(base_dir, dataset_path))
-    if config.do_sampling:
+    if do_sampling:
         total_len = len(data)
-        n_of_sample = int(total_len * config.do_sampling)
+        n_of_sample = int(total_len * do_sampling)
         img_paths = data[:n_of_sample, :1]
         captions = data[:n_of_sample, 2:]
     else:
@@ -50,8 +50,7 @@ def get_data_file(base_dir):
     return train_images, train_captions
 
 
-def get_tokenizer(base_dir, num_words):
-    tokenizer_path = os.path.join(base_dir, 'tokenizer.pkl')
+def get_tokenizer(tokenizer_path, num_words):
     if not os.path.exists(tokenizer_path):
         dataset = get_path_caption(config.caption_file_path)
         captions = dataset[:, 2:]
@@ -77,18 +76,13 @@ def get_tokenizer(base_dir, num_words):
 
     return tokenizer
 
-    
-# Find the maximum length of any caption in our dataset
-def calc_max_length(tensor):
-    return max(len(t) for t in tensor)
 
-def change_text_to_token(base_dir, train_captions):
-    with open('./datasets/tokenizer.pkl', 'rb') as f:
+def change_text_to_token(tokenizer_path, train_captions):
+    with open(tokenizer_path, 'rb') as f:
         tokenizer = pickle.load(f)
     train_seqs = tokenizer.texts_to_sequences(train_captions)
-    max_length = calc_max_length(train_seqs)
-    cap_vector = tf.keras.preprocessing.sequence.pad_sequences(
-        train_seqs, padding='post')
+    max_length = max(len(t) for t in train_seqs)
+    cap_vector = tf.keras.preprocessing.sequence.pad_sequences(train_seqs, padding='post')
     return cap_vector, max_length
 
 
@@ -100,25 +94,3 @@ def load_image(image_path):
     return img, image_path
 
 
-def get_image_datasets(img_name_vector):
-    encode_train = sorted(set(img_name_vector))
-    image_dataset = list(map(load_image, encode_train))
-    # image_dataset = tf.data.Dataset.from_tensor_slices(encode_train)
-    # image_dataset = image_dataset.map(
-    #     load_image, num_parallel_calls=tf.data.experimental.AUTOTUNE).batch(16)  # TODO batch
-    return image_dataset
-
-
-def map_func(img_name, cap):
-    feature_name = os.path.basename(img_name).decode(
-        'utf-8').replace('jpg', 'npy')
-    img_tensor = np.load((os.path.join(BASE_DIR, 'features', feature_name)))
-    return img_tensor, cap
-
-
-def get_tf_dataset(img_name_train, cap_train):
-    dataset = tf.data.Dataset.from_tensor_slices((img_name_train, cap_train))
-    dataset = dataset.map(lambda item1, item2: tf.numpy_function(
-        map_func, [item1, item2], [tf.float32, tf.int32]),
-        num_parallel_calls=tf.data.experimental.AUTOTUNE)
-    return dataset
