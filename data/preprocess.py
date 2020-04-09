@@ -3,11 +3,6 @@ from sklearn.model_selection import train_test_split
 from sklearn.utils import shuffle
 import tensorflow as tf
 import pickle
-# from ai_sub2.doc.img_augmentation import img_aug
-import matplotlib.pyplot as plt
-import matplotlib.image as mpimg
-from pathlib import Path
-from config import config
 import os
 
 
@@ -15,11 +10,11 @@ def get_path_caption(caption_file_path):
     return np.loadtxt(caption_file_path, delimiter='|', skiprows=1, dtype=np.str)
 
 
-def dataset_split_save(base_dir, test_size):
+def dataset_split_save(base_dir, caption_file_path, test_size):
     train_datasets_path = os.path.join(base_dir, 'train_datasets.npy')
     test_datasets_path = os.path.join(base_dir, 'test_datasets.npy')
     if not os.path.exists(train_datasets_path):
-        dataset = get_path_caption(config.caption_file_path)
+        dataset = get_path_caption(caption_file_path)
         train_dataset, val_dataset = train_test_split(dataset,
                                                       test_size=test_size,
                                                       shuffle=False)
@@ -50,9 +45,9 @@ def get_data_file(base_dir, do_what, do_sampling):
     return train_images, train_captions
 
 
-def get_tokenizer(tokenizer_path, num_words):
+def get_tokenizer(tokenizer_path, caption_file_path, num_words):
     if not os.path.exists(tokenizer_path):
-        dataset = get_path_caption(config.caption_file_path)
+        dataset = get_path_caption(caption_file_path)
         captions = dataset[:, 2:]
 
         captions = np.squeeze(captions, axis=1)

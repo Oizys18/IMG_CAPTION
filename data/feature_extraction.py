@@ -1,5 +1,4 @@
 import tensorflow as tf
-from config import config
 from data import preprocess
 import numpy as np
 import os
