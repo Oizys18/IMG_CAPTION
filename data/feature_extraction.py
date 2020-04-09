@@ -3,12 +3,14 @@ import tensorflow as tf
 import matplotlib.pyplot as plt
 from config import config
 from data import preprocess
+
 import numpy as np
 import os
 from tqdm import tqdm
 from .img_augmentation import img_aug
 from pathlib import Path
 from PIL import Image
+import matplotlib.image as mpimg
 
 
 def feature_extraction():
@@ -17,11 +19,13 @@ def feature_extraction():
     tf.compat.v1.reset_default_graph()
     # file 불러오기
     img_name_vector, train_captions = preprocess.get_data_file()
-
+    
     # 데이터 증강
     aug_img_name_vector = []
     if config.img_aug != 'original':
         for img_name in img_name_vector:
+            image = mpimg.imread(
+                Path(config.base_dir, 'datasets', 'images', img_name))
             augmented_img = img_aug(img_name, config.img_aug)
 
             # numpy로 저장
@@ -62,3 +66,5 @@ def feature_extraction():
             path_of_feature = p.numpy().decode("utf-8")
             np.save(os.path.join(config.base_dir, 'datasets', 'features', os.path.basename(
                 path_of_feature).replace('jpg', 'npy')), bf.numpy())
+                
+    return img_name_vector

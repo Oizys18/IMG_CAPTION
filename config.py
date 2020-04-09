@@ -12,7 +12,7 @@ parser.add_argument('--random_state', type=int, default=918273645, help='shuffle
 parser.add_argument('--do_sampling', type=int, default=0.01, help='샘플링 갯수')
 parser.add_argument('--normalize', action='store_false', help="정규화 여부")
 parser.add_argument('--base_dir', type=str, default=Path(os.path.dirname(os.path.abspath(__file__))), help="BASE_DIR")
-parser.add_argument('--img_aug', type=str, default='original', help="이미지 데이터 증강, seq, ba, ba_box")
+parser.add_argument('--img_aug', type=str, default='original', help="이미지 데이터 증강")
 config = parser.parse_args()
 
 print(config.do_what + '_dataset 을 실행시킵니다.')
