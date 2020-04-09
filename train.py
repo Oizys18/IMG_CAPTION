@@ -33,6 +33,8 @@ else:
 tokenizer = preprocess.save_tokenizer(train_datasets_path)
 tokenizer_path = os.path.join(BASE_DIR, 'tokenizer.pkl')
 
+# feature 생성
+feature_extraction()
 
 def loss_function(real, pred):
   mask = tf.math.logical_not(tf.math.equal(real, 0))
