@@ -19,6 +19,7 @@ parser.add_argument('--buffer_size', type=int, default=48, help='데이터셋을
 parser.add_argument('--batch_size', type=int, default=16, help='mini batch 크기')
 parser.add_argument('--units', type=int, default=512, help='RNN 유닛(unit) 수')
 parser.add_argument('--epochs', type=int, default=6, help='EPOCH 크기')
+parser.add_argument('--checkpoint', action='store_false', help='체크포인트 로드 여부')
 config = parser.parse_args()
 
 print(config.do_what + '_dataset 을 실행시킵니다.')
