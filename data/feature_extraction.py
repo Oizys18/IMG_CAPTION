@@ -18,7 +18,7 @@ def feature_extraction(base_dir, img_name_vector, train_captions, conf_img_aug):
     # 데이터 증강
     aug_img_name_vector = []
     aug_img_captions = []
-    if conf_img_aug != 'false':
+    if conf_img_aug != False:
         for idx, img_name in enumerate(img_name_vector):
             augmented_img = img_aug(img_name)
             agimage = Image.fromarray(augmented_img)

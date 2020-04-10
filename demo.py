@@ -15,5 +15,3 @@ image_path = root.filename
 result, attention_plot = predict.evaluate(image_path)
 print ('Prediction Caption:', ' '.join(result))
 predict.plot_attention(image_path, result, attention_plot)
-# opening the image
-# Image.open(image_path)

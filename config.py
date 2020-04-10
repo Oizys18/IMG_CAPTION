@@ -23,4 +23,4 @@ parser.add_argument('--checkpoint', action='store_false', help='체크포인트 
 config = parser.parse_args()
 
 print(config.do_what + '_dataset 을 실행시킵니다.')
-print('Image augmentation method: '+config.img_aug)
+print(config.img_aug)
