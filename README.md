@@ -51,9 +51,27 @@
     |          | Pillow         | 7.0.0    |
     | 기타     | Anaconda       | 4.8.2    |
 
+- 컴퓨터의 환경에 따라 config 를 통해 batch, epoch 사이즈를 조정할 수 있습니다. 
 
+- 또는 GPU 환경을 아래 코드를 통해 조정하면 더 원활하게 프로그램을 실행시킬 수 있습니다.
 
+  ```python
+  # train.py
+  
+  from tensorflow.compat.v1 import ConfigProto
+  from tensorflow.compat.v1 import InteractiveSession
+  
+  config = ConfigProto()
+  
+  # 방법 1
+  config.gpu_options.per_process_gpu_memory_fraction = 0.4
+  # 방법 2
+  config.gpu_options.allow_growth = True
+  
+  session = InteractiveSession(config=config)
+  ```
 
+  
 
 
 ## 🚀 Quick Start
@@ -69,6 +87,7 @@
     - `tokernizer` 를 불러옵니다. 
   - 모델 학습을 수행하며 손실을 출력합니다.
 
+
 - 학습시킨 모델을 검증하고 테스트 합니다.
 
   ```bash
@@ -77,6 +96,19 @@
 
   - 테스트 데이터에서 임의의 이미지를 뽑아 캡션을 생성합니다.
   - 이미지와 캡션을 시각화하고 실제 캡션을 함께 출력하여 비교할 수 있게 합니다.
+
+
+- 사용자가 임의의 사진을 업로드 하면 학습된 모델을 통해 캡션을 생성 합니다.
+
+  ```bash
+  $python demo.py
+  ```
+
+- 이미지 증강이 어떤 식으로 이루어지는지 보여줍니다.
+
+  ```bash
+  $python doc/img_augmentation_test.py
+  ```
 
 - 정규화한 이미지를 보여줍니다.
 
@@ -141,26 +173,38 @@
 └─ predict.py
 ```
 
+- train.py, predict.py 를 실행시킬 때 config 를 통해 batch, epoch 등의 변수를 조정할 수 있습니다. 자세한 설명은 아래 코드를 입력하시면 확인하실 수 있습니다. 또한 이 변수들은 파일을 실행시켰을 때 datastes/config.csv 에 저장됩니다.
+
+```bash
+$ python train.py -h
+```
+
+
+
 
 
 ### 2. 데이터 전처리
 
 #### 데이터셋 분리 및 저장
 
-- `train.py` 에서 `train_datasets_path` 와 `test_datasets_path` 를 불러올 때, 해당 파일이 생성되어 있는지 여부를 판단합니다. 아직 데이터셋이 없다면 전체 데이터셋을 분리, 저장하는 `dataset_split_save()` 함수를 호출합니다.
+- `train.py` 에서 preprocess.py의  `dataset_split_save ` 함수를 호출하여`train_datasets` 과 `test_datasets` 파일의 생성 여부를 확인합니다. 아직 데이터셋이 없다면 전체 데이터셋을 분리, 저장합니다.
 
   ``````python
-  # train.py
+  # preprocess.py
   
-  train_datasets_path = os.path.join(BASE_DIR, 'train_datasets.npy')
-  test_datasets_path = os.path.join(BASE_DIR, 'test_datasets.npy')
-  if not os.path.exists(train_datasets_path):
-      # 이미지 경로 및 캡션 불러오기
-      dataset = preprocess.get_path_caption(config.caption_file_path)
-      preprocess.dataset_split_save(dataset, BASE_DIR, config.test_size)
-      print('dataset 을 train_datasets 과 test_datasets 으로 나눕니다.')
-  else:
-      print('저장 된 train_datasets 과 test_datasets 을 사용합니다.')
+  def dataset_split_save(base_dir, caption_file_path, test_size):
+      train_datasets_path = os.path.join(base_dir, 'train_datasets.npy')
+      test_datasets_path = os.path.join(base_dir, 'test_datasets.npy')
+      if not os.path.exists(train_datasets_path):
+          dataset = get_path_caption(caption_file_path)
+          train_dataset, val_dataset = train_test_split(dataset,
+                                                        test_size=test_size,
+                                                        shuffle=False)
+          np.save(train_datasets_path, train_dataset)
+          np.save(test_datasets_path, val_dataset)
+          print('dataset 을 train_datasets 과 test_datasets 으로 나눕니다.')
+      else:
+          print('저장 된 train_datasets 과 test_datasets 을 사용합니다.')
   ``````
 
 - `test-size` 값을 config 로 설정하여 train-test 비율을 지정할 수 있습니다. 
@@ -175,7 +219,47 @@
 
 #### 텍스트 토큰화
 
+- `tokenizer.pkl`이 없다면 tokenizer 를 생성, 저장합니다.
 
+  ```python
+  def get_tokenizer(tokenizer_path, caption_file_path, num_words):
+      if not os.path.exists(tokenizer_path):
+          dataset = get_path_caption(caption_file_path)
+          captions = dataset[:, 2:]
+  
+          captions = np.squeeze(captions, axis=1)
+          captions = ['<start>' + cap + ' <end>' for cap in captions]
+  
+          tokenizer = tf.keras.preprocessing.text.Tokenizer(num_words=num_words + 1,
+                                                            oov_token='<unk>',
+                                                            lower=True,
+                                                            split=' ',
+                                                            filters='!"#$%&()*+.,-/:;=?@[\]^_`{|}~ ')
+  
+          tokenizer.fit_on_texts(captions)
+          tokenizer.word_index['<pad>'] = 0
+          tokenizer.index_word[0] = '<pad>'
+  
+          with open(tokenizer_path, 'wb') as f:
+              pickle.dump(tokenizer, f, protocol=pickle.HIGHEST_PROTOCOL)
+      else:
+          with open(tokenizer_path, 'rb') as f:
+              tokenizer = pickle.load(f)
+  
+      return tokenizer
+  ```
+
+- 저장 된 Tokenizer 를 불러와 주어진 텍스트를 벡터로 변경, 각 캡션의 길이를 맞춰줍니다.
+
+  ```python
+  def change_text_to_token(tokenizer_path, train_captions):
+      with open(tokenizer_path, 'rb') as f:
+          tokenizer = pickle.load(f)
+      train_seqs = tokenizer.texts_to_sequences(train_captions)
+      max_length = max(len(t) for t in train_seqs)
+      cap_vector = tf.keras.preprocessing.sequence.pad_sequences(train_seqs, padding='post')
+      return cap_vector, max_length
+  ```
 
 #### 이미지 정규화
 
@@ -194,92 +278,86 @@
 
 #### 이미지 증강
 
-``````python
-from imgaug import augmenters as iaa
-# imgaug 모듈을 불러옵니다
-``````
+- 파이썬 라이브러리 `imgaug`를 사용하여 Image Augmentation(이하 이미지 증강) 을 수행합니다.
 
-파이썬 라이브러리 `imgaug` 사용하여 Image Augmentation(이하 이미지 증강) 을 수행합니다.
+  ```python
+  from imgaug import augmenters as iaa
+  # imgaug 모듈을 불러옵니다
+  ```
 
-Sequentianl 안에서 여러 종류의 이미지 증강을 수행합니다.
+  Sequentianl 안에서 여러 종류의 이미지 증강을 수행합니다. 
 
-BlendAlpha 로 알파블렌딩 작업을 추가해 이미지를 증강할 수 있습니다.
+  BlendAlpha 로 알파블렌딩 작업을 추가해 이미지를 증강할 수 있습니다.
 
 - 이미지 증강 작업은 `feature_extraction.py` 에서 호출합니다.
 
 #### 특징 추출
 
-`feature_extraction()` 안에서 이미지 증강 실행 여부를 판별하고, 수행합니다. 증강된 이미지는 데이터셋 폴더에 저장됩니다.
+- `feature_extraction()` 안에서 이미지 증강 실행 여부를 판별하고, 수행합니다. 증강된 이미지는 데이터셋 폴더에 저장됩니다. 증강한 이미지들에서 특징값을 추출할 때는 사전학습된 InceptionV3 모델을 사용합니다. `preprocess` 의 `load_image` 부분에서 전처리 과정을 수행해 이미지를 불러옵니다. 이때 InceptionV3의 학습에 주로 이용된 형식으로 매치시킵니다. `num_parallel_calls=tf.data.experimental.AUTOTUNE` 는 병렬데이터셋을 불러오고, 파일을 여는 데 기다리는 시간을 단축합니다.
 
-증강한 이미지들에서 특징값을 추출합니다.
+- 속도상(bottleneck)의 문제로 모델링은 최초 1번만 수행합니다. 
 
-사전학습된 InceptionV3 모델을 사용합니다.  `preprocess` 의 `load_image` 부분에서 전처리 과정을 수행해 이미지를 불러옵니다. 이때 InceptionV3의 학습에 주로 이용된 형식으로 매치시킵니다. 
-
-InceptionV3 의 Weights 값을 초기화하고 ImageNet 으로 사전학습된 Weigth 를 불러옵니다.
-
-``````python
-image_model = tf.keras.applications.InceptionV3(include_top=False,weights='imagenet')
-new_input = image_model.input
-hidden_layer = image_model.layers[-1].output
-image_features_extract_model = tf.keras.Model(new_input, hidden_layer)
-``````
-
-속도상(bottleneck)의 문제로 모델링은 최초 1번만 수행합니다.
-
-tqdm을 이용해서 output(특징값)을 RAM 에 Caching 합니다.
-
-`num_parallel_calls=tf.data.experimental.AUTOTUNE` 는 병렬데이터셋을 불러오고, 파일을 여는 데 기다리는 시간을 단축합니다.
+  ```python
+  image_model = tf.keras.applications.InceptionV3(include_top=False,weights='imagenet')
+  new_input = image_model.input
+  hidden_layer = image_model.layers[-1].output
+  image_features_extract_model = tf.keras.Model(new_input, hidden_layer)
+  ```
 
 
 
-### 3. 실..행....
+### 3. 실행
+
+#### 모델 학습
+
+-  RNN, CNN 구현 코드는 크게는 TensorFlow 공식 문서 [Image captioning with visual attention](https://www.tensorflow.org/tutorials/text/image_captioning) 자료를 참고하고 있습니다. 이 자료에서 Attention 과 관련한 부분은 [Show, Attend and Tell: Neural Image Caption Generation with Visual Attention](https://arxiv.org/abs/1502.03044) 를 참고합니다.
+
+
 
 #### train_step
 
-`GradientTape` 는 자동 미분(주어진 입력 변수에 대한 연산의 그래디언트gradient 를 계산)하는  텐서플로우 API 입니다. ([텐서플로우 공식문서](https://www.tensorflow.org/tutorials/customization/autodiff#그레디언트_테이프))
+- `GradientTape` 는 자동 미분(주어진 입력 변수에 대한 연산의 그래디언트gradient 를 계산)하는  텐서플로우 API 입니다. ([텐서플로우 공식문서](https://www.tensorflow.org/tutorials/customization/autodiff#그레디언트_테이프)) 그레디언트 테이프 컨텍스트 안에서 계산을 수행합니다.
 
-``````python
-with tf.GradientTape() as tape:
-	...
-``````
-
-그레디언트 테이프 컨텍스트 안에서 계산을 수행합니다.
-
-
+  ```python
+  with tf.GradientTape() as tape:
+  	...
+  ```
 
 #### checkpoint
 
-일정 지점마다 모델 변수를 저장하는 checkpoint manager 를 생성합니다.
+- 일정 지점마다 모델 변수를 저장하는 checkpoint manager 를 생성합니다.
 
-아래와 같은 메세지와 함께 저장됩니다.
-
-
-
-저장된 체크포인트가 있다면,
+- 저장된 체크포인트가 있다면, 가장 최신 체크포인트의를 불러와 모델 학습을 시작합니다.
 
 ![checkpoint](./doc/images/checkpoint.PNG)
 
-가장 최신 체크포인트의를 불러와 모델 학습을 시작합니다.
-
 #### Optimizer & Loss function
 
-optimizer 는 `Adam` 을,
-
-손실 함수는 integer 인코딩이므로 `Sparse Categorical Cross Entropy` 를 사용합니다.
-
-
+- optimizer 는 `Adam` 을, 손실 함수는 integer 인코딩이므로 `Sparse Categorical Cross Entropy` 를 사용합니다.
 
 
 
 ### 4. 결과물
 
-`train.py` 실행시 아래처럼 출력됩니다.
+- `train.py` 실행시 아래처럼 출력됩니다.
 
 ![checkpoint_1](./doc/images/checkpoint_1.PNG)
 
-`predict.py` 실행시 아래와 같은 결과물을 확인할 수 있습니다.
+- `predict.py` 실행시 아래와 같은 결과물을 확인할 수 있습니다.
 
-# **이 부분 새거 넣을거!!**
+  - 출력 결과
+
+    ![predict_1](./doc/images/predict_1.PNG)
+
+- `demo.py` 실행 시 아래와 같은 결과물을 확인할 수 있습니다.
+
+  - 사진 선택
+
+    ![demo_1](./doc/images/demo_1.PNG)
+
+  - 출력 결과
+
+    ![demo_3](./doc/images/demo_3.PNG)
 
 
 
@@ -315,7 +393,7 @@ optimizer 는 `Adam` 을,
 
 > SSAFY 2기 4반 5팀 : 김수민, 양찬우, 이수진, 조현동, 최솔지 
 
-**너는**  ![team](./doc/images/team.jpg)
+**	너는**  ![team](./doc/images/team.jpg)
 
 
 
