@@ -142,7 +142,7 @@ for epoch in range(start_epoch, EPOCHS):
     if epoch % 5 == 0:
         ckpt_manager.save()
         ckpt_path = ckpt_manager.save()
-        print('Checkpoint {} 저장 : {}'.format(epoch, ckpt_path))
+        print('Checkpoint {} 저장'.format(epoch, ckpt_path))
 
     print('Epoch {} Loss {:.6f}'.format(epoch + 1,
                                         total_loss/num_steps))
