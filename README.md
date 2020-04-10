@@ -319,7 +319,7 @@ optimizer 는 `Adam` 을,
 
 
 
-![딱대팀](C:\Users\multicampus\Pictures\딱대팀.png)
+![딱대팀](./doc/images/team_ttakdae.png)
 
 
 
