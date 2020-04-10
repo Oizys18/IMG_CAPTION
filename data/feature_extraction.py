@@ -1,11 +1,13 @@
 import tensorflow as tf
 from data import preprocess
+
 import numpy as np
 import os
 from tqdm import tqdm
 from .img_augmentation import img_aug
 from pathlib import Path
 from PIL import Image
+import matplotlib.image as mpimg
 
 
 def feature_extraction(base_dir, img_name_vector, train_captions, conf_img_aug):
