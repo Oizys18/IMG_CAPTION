@@ -2,14 +2,15 @@ import numpy as np
 import tensorflow as tf
 from PIL import Image
 import matplotlib.pyplot as plt
+import os
 
-
-def get_data_file():
-    data = np.load('../datasets/test_datasets.npy')
+def get_data_file(base_dir):
+    data_path = os.path.join(base_dir, 'datasets', 'test_datasets.npy')
+    data = np.load(data_path)
     img_paths = data[:50, :1]
     captions = data[:50, 2:]
     train_images = np.squeeze(img_paths, axis=1)
-    train_images = ['../datasets/images/' + img for img in train_images]
+    train_images = [os.path.join(base_dir, 'datasets', 'images', img) for img in train_images]
     train_captions = np.squeeze(captions, axis=1)
     train_captions = ['<start>' + cap + ' <end>' for cap in train_captions]
     train_images = list(set(train_images))  # 테스트를 위한 중복제거
@@ -44,7 +45,9 @@ def img_normalization_2(img):
     return [nn_moments_image, image_standardization_image]
 
 
-train_images, train_captions = get_data_file()
+base_dir = os.path.abspath('.')
+train_images, train_captions = get_data_file(base_dir)
+
 
 train_images = train_images[:2]
 for train_image in train_images:
