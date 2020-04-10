@@ -96,5 +96,7 @@ print('Prediction Caption:', ' '.join(result))
 plot_attention(image, result, attention_plot)
 # opening the image
 img = Image.open(image)
+w, h = img.size
+plt.text(0, h+50, 'Real Caption: {}\nPrediction Caption: {}'.format(real_caption, ' '.join(result)), fontsize=12)
 plt.imshow(img)
 plt.show()
