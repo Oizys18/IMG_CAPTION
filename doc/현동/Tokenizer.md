@@ -107,8 +107,9 @@
 4. 빈도 순으로 정렬한 단어 집합 (Vocabulary) 만들기
 
    - num_words :  빈도수가 높은 상위 몇 개의 단어만 사용하겠다고 지정하는 값 (+1 : padding 을 제외하고 top_k 값이 되도록 하기 위해)
-   - oov : keras tokenizer 는 기본적으로 단어 집합에 없는 단어인 OOV에 대해서, 단어를 정수로 바꾸는 과정에서 아예 단어를 제거한다는 특징이 있습니다. 단어 집합에 없는 단어들은 OOV로 간주하여 보존하고 싶다면 tokenizer의 인자 oov_token을 사용합니다.
-
+     - num_words 를 지정하는 것 과 index_word 와 word_index 는 상관 없다. [여기](#num_words)
+- oov : keras tokenizer 는 기본적으로 단어 집합에 없는 단어인 OOV에 대해서, 단어를 정수로 바꾸는 과정에서 아예 단어를 제거한다는 특징이 있습니다. 단어 집합에 없는 단어들은 OOV로 간주하여 보존하고 싶다면 tokenizer의 인자 oov_token을 사용합니다.
+  
    ```python
    top_k = 5000
    tokenizer = tf.keras.preprocessing.text.Tokenizer(num_words=top_k + 1,
@@ -116,7 +117,8 @@
                                                      split=' ',
                                                      filters='!"#$%&()*+.,-/:;=?@[\]^_`{|}~ ')
    ```
-
+```
+   
    
    
 5. `fit_on_texts` 빈도수를 기준으로 단어 집합을 생성합니다.
@@ -126,7 +128,7 @@
    print(tokenizer.word_index)  # 각 단어에 인덱스가 어떻게 부여되었는가 확인
    print('%s개의 고유한 토큰을 찾았습니다.' % len(tokenizer.word_index))
    print(tokenizer.word_counts)  # 각 단어가 카운트를 수행하였을 때 몇 개였는가 확인
-   ```
+```
 
    ```bash
    {'<unk>': 1, 'a': 2, 'in': 3, 'on': 4, 'the': 5, 'of': 6, 'man': 7, 'with': 8,}
@@ -265,13 +267,27 @@ with open('tokenizer.pickle', 'rb') as f:
 
 
 
+-----
+
+### num_words
+
+https://github.com/keras-team/keras/issues/8092
 
 
 
+![token1](./images/token1.PNG)
 
 
 
+![token2](./images/token2.PNG)
 
+
+
+![token3](./images/token3.PNG)
+
+
+
+![token4](./images/token4.PNG)
 
 
 
