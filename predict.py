@@ -2,15 +2,11 @@ import tensorflow as tf
 import os
 import numpy as np
 from data.preprocess import load_image
-from utils import utils
-from data.feature_extraction import feature_extraction
-from sklearn.model_selection import train_test_split
 from models.encoder import CNN_Encoder
 from models.decoder import RNN_Decoder
 import pickle
-from train import embedding_dim, BUFFER_SIZE, BATCH_SIZE, units, vocab_size, img_name_train, img_name_val, dataset, max_length, cap_val
+from train import embedding_dim, units, vocab_size, img_name_train, img_name_val, max_length, cap_val
 import matplotlib.pyplot as plt
-import time
 from PIL import Image
 from config import config
 from pathlib import Path
@@ -20,7 +16,10 @@ encoder = CNN_Encoder(embedding_dim)
 decoder = RNN_Decoder(embedding_dim, units, vocab_size)
 num_steps = len(img_name_train)
 
-with open('./datasets/tokenizer.pkl', 'rb') as f:
+
+BASE_DIR = os.path.join(config.base_dir, 'datasets')
+tokenizer_path = os.path.join(BASE_DIR, 'tokenizer.pkl')
+with open(tokenizer_path, 'rb') as f:
     tokenizer = pickle.load(f)
 
 attention_features_shape = 64
@@ -83,7 +82,6 @@ def plot_attention(image, result, attention_plot):
     plt.show()
 
 
-# captions on the validation set
 rid = np.random.randint(0, len(img_name_val))
 image = f"{Path(config.base_dir,'datasets','images',img_name_val[rid])}"
 real_caption = ' '.join([tokenizer.index_word[i]
@@ -94,7 +92,7 @@ print(img_name_val[rid])
 print('Real Caption:', real_caption)
 print('Prediction Caption:', ' '.join(result))
 plot_attention(image, result, attention_plot)
-# opening the image
+
 img = Image.open(image)
 w, h = img.size
 plt.text(0, h+50, 'Real Caption: {}\nPrediction Caption: {}'.format(real_caption, ' '.join(result)), fontsize=12)

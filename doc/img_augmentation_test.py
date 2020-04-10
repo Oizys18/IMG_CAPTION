@@ -1,14 +1,15 @@
 import matplotlib.image as mpimg
 import tensorflow as tf
-import imgaug as ia
+import os
 from imgaug import augmenters as iaa
 from pathlib import Path
 import matplotlib.pyplot as plt
 import random
 
-def img_aug(img_name):
+
+def img_aug(img_name, base_dir):
     image = mpimg.imread(
-        Path('..', 'datasets', 'images', img_name))
+        Path(base_dir, 'datasets', 'images', img_name))
 
     ran = random.randint(1,5)
     if ran == 1:
@@ -37,9 +38,9 @@ def img_aug(img_name):
     return image
 
 
-
-img_names=['36979.jpg','256063.jpg','371902.jpg']
+base_dir = os.path.abspath('.')
+img_names = ['36979.jpg','256063.jpg','371902.jpg']
 for image_name in img_names:
-    image = img_aug(image_name)
+    image = img_aug(image_name, base_dir)
     plt.imshow(image)
     plt.show()
