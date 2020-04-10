@@ -119,9 +119,9 @@ ckpt_manager = tf.train.CheckpointManager(ckpt, checkpoint_path, max_to_keep=3)
 
 # train
 start_epoch = 0
-if ckpt_manager.latest_checkpoint:
+if ckpt_manager.latest_checkpoint and config.checkpoint:
     start_epoch = int(ckpt_manager.latest_checkpoint.split('-')[-1])
-    print("마지막으로 저장된 epoch {} 부터 시작합니다.".format(start_epoch + 1))
+    print("저장된 체크포인트를 불러옵니다. Checkpoint: {}".format(start_epoch))
     ckpt.restore(ckpt_manager.latest_checkpoint)
 
 loss_plot = []
@@ -142,7 +142,7 @@ for epoch in range(start_epoch, EPOCHS):
     if epoch % 5 == 0:
         ckpt_manager.save()
         ckpt_path = ckpt_manager.save()
-        print('Epoch {} 저장 : {}'.format(epoch+1, ckpt_path))
+        print('Checkpoint {} 저장'.format(epoch, ckpt_path))
 
     print('Epoch {} Loss {:.6f}'.format(epoch + 1,
                                         total_loss/num_steps))
