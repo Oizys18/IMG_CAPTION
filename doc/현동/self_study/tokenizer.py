@@ -16,10 +16,10 @@ print(train_captions.shape)
 print(train_captions.ndim)
 train_captions = np.squeeze(train_captions, axis=1)
 stime = time.time()
-for i in range(len(train_captions)):
-    train_captions[i] = '<start>' + train_captions[i] + ' <end>'
+# for i in range(len(train_captions)):
+#     train_captions[i] = '<start>' + train_captions[i] + ' <end>'
 # 0.21904897689819336
-# train_captions = ['<start>' + cap + ' <end>' for cap in train_captions]
+train_captions = ['<start>' + cap + ' <end>' for cap in train_captions]
 etime = time.time()
 # 0.17506980895996094
 print(etime-stime)
