@@ -11,7 +11,7 @@ parser.add_argument('--num_words', type=int, default=5000, help='tokenizer 의 �
 parser.add_argument('--test_size', type=int, default=0.3, help='데이터셋을 테스트데이터로 나눌 비율')
 parser.add_argument('--normalize', action='store_false', help='정규화 여부')
 parser.add_argument('--do_sampling', type=int, default=0.01, help='샘플링 갯수')
-parser.add_argument('--img_aug', type=str, default='original', help="이미지 데이터 증강")
+parser.add_argument('--img_aug', action='store_false', help='이미지 데이터 증강')
 parser.add_argument('--random_state', type=int, default=918273645, help='shuffle 난수')
 parser.add_argument('--val_size', type=int, default=0.2, help='train dataset 을 train 과 val 로 나눌 비율')
 parser.add_argument('--embedding_dim', type=int, default=256, help='RNN embedding 차원')
