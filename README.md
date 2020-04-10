@@ -8,11 +8,11 @@
 
 ## 🛒 Table of Contents
 
-- [Installation](#installation)
-- [Quick Start](#Quick Start)
-- [Features](#features)
-- [Documentation](#Documentation)
-- [Team](#Team)
+- [Installation](#🏃 Installation)
+- [Quick Start](#🚀 Quick Start)
+- [Features](#⚡ Features)
+- [Documentation](#🕵 Documentation)
+- [Team](#💖 Team)
 
 
 
